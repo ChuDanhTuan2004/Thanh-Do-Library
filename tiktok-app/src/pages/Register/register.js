@@ -1,34 +1,56 @@
-import {createContext, useState} from "react";
+import {useState} from "react";
 import {useAuth} from "../../context/AuthContext";
-import {useForm} from "react-hook-form";
 import userService from "../../service/userService";
 import {useNavigate} from "react-router-dom";
 import {enqueueSnackbar} from "notistack";
+import {useFormik} from "formik";
+import * as Yup from "yup";
+import CusInput from "../../components/input/Input";
 
 function Register() {
     const {login} = useAuth();
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-    } = useForm()
 
-    const onSubmit = (data) => {
+    const formik = useFormik({
+        initialValues: {
+            email: "",
+            password: "",
+            confirm_password: ""
+        },
+        validationSchema: Yup.object({
+            email: Yup.string()
+                .email("Email không hợp lệ")
+                .required("Email không được để trống"),
+            password: Yup.string()
+                .min(8, "Mật khẩu tối thiểu 8 ký tự")
+                .required("Mật khẩu không được để trống"),
+            confirm_password: Yup.string()
+                .oneOf([Yup.ref("password")], "Mật khẩu không trùng")
+                .required("Trường này không được để trống!")
+        }),
+        onSubmit: values => {
+            doSubmit(JSON.stringify(values, null, 2))
+        }
+    });
+    const doSubmit = (data) => {
+        alert(data)
         setLoading(true)
         const promise = userService.doRegister(data)
         promise.then((res) => {
             setLoading(false)
             console.log(res)
             navigate(`/holder?email=${res.data}`, {replace: true} )
-        }).catch(() => {
-            enqueueSnackbar('Email đã tồn tại!', { variant: 'error', anchorOrigin: {
-                    vertical: 'top',
-                    horizontal: 'right'
-                } })
+        }).catch((e) => {
             setLoading(false)
+           if (e?.response.data?.email) {
+               navigate(`/holder?email=${e.response.data.email}&pending=true`, {replace: true} )
+           } else {
+               enqueueSnackbar('Email đã tồn tại!', { variant: 'error', anchorOrigin: {
+                       vertical: 'top',
+                       horizontal: 'right'
+                   }})
+           }
         })
 
     }
@@ -60,21 +82,23 @@ function Register() {
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                             Đăng ký
                         </h1>
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-6" action="#">
+                        <form onSubmit={formik.handleSubmit} className="space-y-4 md:space-y-6" action="#">
                             <div>
                                 <label
                                     htmlFor="email"
                                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Email <span className={"text-red-500"}>*</span>
                                 </label>
-                                <input
-                                    {...register("email")}
+                                <CusInput
+                                    error={formik.errors.email && formik.touched.email}
+                                    errorMsg={formik.touched.email && formik.errors.email }
                                     type="email"
                                     name="email"
                                     id="email"
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="name@company.com"
-                                    required=""
+                                    placeholder="example@gmail.com"
+                                    value={formik.values.email}
+                                    onChange={formik.handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 />
                             </div>
                             <div>
@@ -82,13 +106,34 @@ function Register() {
                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Mật khẩu <span className={"text-red-500"}>*</span>
                                 </label>
-                                <input
-                                    {...register("password")}
+                                <CusInput
+                                    error={formik.errors.password && formik.touched.password}
+                                    errorMsg={formik.touched.password && formik.errors.password }
                                     type="password"
                                     name="password"
                                     id="password"
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="name@company.com" required=""/>
+                                    placeholder="example@gmail.com"
+                                    value={formik.values.password}
+                                    onChange={formik.handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="re-password"
+                                       className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Nhập lại mật khẩu <span className={"text-red-500"}>*</span>
+                                </label>
+                                <CusInput
+                                    error={formik.errors.confirm_password && formik.touched.confirm_password}
+                                    errorMsg={formik.touched.confirm_password && formik.errors.confirm_password }
+                                    type="password"
+                                    name="confirm_password"
+                                    id="confirm_password"
+                                    placeholder="example@gmail.com"
+                                    value={formik.values.confirm_password}
+                                    onChange={formik.handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                />
                             </div>
                             {/*<div>*/}
                             {/*    <label htmlFor="re-password"*/}

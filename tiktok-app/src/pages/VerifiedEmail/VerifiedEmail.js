@@ -13,10 +13,7 @@ export default function VerifiedEmail() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log(token)
         userService.verifyToken(token).then(res => {
-            console.log(res)
-
             setLoading(false);
             setVerified("true")
 
@@ -29,7 +26,6 @@ export default function VerifiedEmail() {
                 });
             }, 1000);
         }).catch(e => {
-            console.log(e)
             setLoading(false);
             setVerified("false");
             let timer = setInterval(() => {
