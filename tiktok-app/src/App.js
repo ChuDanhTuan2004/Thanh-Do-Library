@@ -15,7 +15,7 @@ function App() {
         <AuthProvider>
             <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
             <Routes>
-                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/holder" element={<VerifyEmailPlaceholderPage />} />
                 <Route path="/verifyEmail" element={<VerifiedEmail />} />
