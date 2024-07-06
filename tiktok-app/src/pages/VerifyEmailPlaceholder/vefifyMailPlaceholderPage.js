@@ -6,7 +6,7 @@ import userService from "../../service/userService";
 
 export default function VerifyEmailPlaceholderPage(){
     const [searchParams, setSearchParams] = useSearchParams();
-    const email =searchParams.get("email");
+    const email = searchParams.get("email");
 
     if (!email) {
         return <Navigate to="/login"></Navigate>
