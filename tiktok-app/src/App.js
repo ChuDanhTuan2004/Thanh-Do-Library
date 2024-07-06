@@ -8,6 +8,8 @@ import Register from "./pages/Register/register";
 import VerifyEmailPlaceholderPage from "./pages/VerifyEmailPlaceholder/vefifyMailPlaceholderPage";
 import {SnackbarProvider} from "notistack";
 import VerifiedEmail from "./pages/VerifiedEmail/VerifiedEmail";
+import NoHeaderLayout from "./layout/noHeader/noHeaderLayout";
+import Home from "./pages/Home/home";
 
 function App() {
 
@@ -15,7 +17,12 @@ function App() {
         <AuthProvider>
             <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
             <Routes>
-                <Route path="/" element={<Login />} />
+                <Route path="/" element={
+                    <NoHeaderLayout>
+                         <Home/>
+                    </NoHeaderLayout>
+                    } />
+                <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/holder" element={<VerifyEmailPlaceholderPage />} />
                 <Route path="/verifyEmail" element={<VerifiedEmail />} />

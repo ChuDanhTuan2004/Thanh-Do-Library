@@ -16,7 +16,7 @@ export const userService =
                 email: mail,
                 action: action
             }
-            return await axios.post(`${BASE_BE_URL}api/v1/auth/register`, data);
+            return await axios.post(`${BASE_BE_URL}api/verificationToken/update`, data);
         },
 
         getPost: function (id) {
