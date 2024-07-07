@@ -8,7 +8,8 @@ export const userService =
         },
 
         doRegister: async function (user) {
-            return await axios.post(`${BASE_BE_URL}api/v1/auth/register`, user);
+            return await axios.get(`${BASE_BE_URL}api/v1/auth`);
+            // return await axios.post(`${BASE_BE_URL}api/v1/auth/register`, user);
         },
 
         updateVerifyMail: async function (mail, action) {
