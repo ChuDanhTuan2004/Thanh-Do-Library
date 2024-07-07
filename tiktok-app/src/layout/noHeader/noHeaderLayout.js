@@ -5,8 +5,7 @@ import SidebarHomeManager from "../../components/layoutComponent/sidebarHomeMana
 
 export default function NoHeaderLayout({children}) {
     return (
-        <div >
-            <SidebarHomeManager />
+        <div className={"font-medium"}>
             <div>
                 {children}
             </div>

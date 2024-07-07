@@ -5,20 +5,25 @@ import {useState} from "react";
 
 export default function SidebarHomeManager() {
     const [showSidebar, setShowSidebar] = useState(false);
-    const [tile, setTile] = useState("Title");
+    const [title, setTitle] = useState("Title");
+
+    const setTileFromThread = (title) => {
+        setTitle(title)
+        setShowSidebar(false);
+    }
+
     return (
         <div className={"sidebar_home_manager"}>
             {showSidebar && (
                 <div>
-                    <Sidebar setTitle={setTile} setShowSidebar={setShowSidebar}/>
+                    <Sidebar setTitle={setTileFromThread}/>
                     <div className={"between_layer"} onClick={() => {
                         setShowSidebar(false)
                     }}>
-
                     </div>
                 </div>
             )}
-            <MainController title={tile} setShowSidebar={setShowSidebar}/>
+            <MainController title={title} setShowSidebar={setShowSidebar}/>
         </div>
     )
 

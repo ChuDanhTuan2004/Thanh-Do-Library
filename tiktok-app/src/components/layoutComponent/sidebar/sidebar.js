@@ -6,8 +6,8 @@ import ThreadMessage from "../../threadMessage/threadMessage";
 
 export default function Sidebar({setTitle}) {
     return (<>
-        <div className={"z-20 absolute p-3 w-10/12 min-h-screen text-second_primary-0 bg-second_primary-800"}>
-            <div className={"flex pb-3 items-center "}>
+        <div className={"z-20 absolute p-1 w-10/12 min-h-screen text-second_primary-0 bg-second_primary-900"}>
+            <div className={"flex p-3 items-center "}>
                 <Avatar size={40}/>
                 <div className={"pl-2 flex-1 flex items-center text-second_primary-0 "}>
                     Tùng Vũ
@@ -26,9 +26,11 @@ export default function Sidebar({setTitle}) {
                     reactIcon={<FaComment className={"size-5 text-second_primary-0"}/>}
                     title={"Đoạn chat"}/>
                 <ThreadMessage
-                    onClick={()=> {setTitle("Tin nhắn đang chờ")}}
+                    setTitle={setTitle}
                     reactIcon={<AiFillMessage className={"size-5 text-second_primary-0"} />}
-                    title={"Tin nhắn đang chờ"}/>
+                    title={"Tin nhắn đang chờ"}
+
+                />
             </div>
             <div className={"flex flex-col"}>
                 <div className={"flex justify-between text-sm my-2"}>
