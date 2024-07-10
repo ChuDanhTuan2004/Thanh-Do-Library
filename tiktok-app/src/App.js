@@ -10,6 +10,7 @@ import {SnackbarProvider} from "notistack";
 import VerifiedEmail from "./pages/VerifiedEmail/VerifiedEmail";
 import NoHeaderLayout from "./layout/noHeader/noHeaderLayout";
 import Home from "./pages/Home/home";
+import DemoSocket from "./pages/demosocket/demo";
 
 function App() {
 
@@ -18,9 +19,10 @@ function App() {
             <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
             <Routes>
                 <Route path="/" element={
-                    <NoHeaderLayout>
-                         <Home/>
-                    </NoHeaderLayout>
+                    // <NoHeaderLayout>
+                    //      <Home/>
+                    // </NoHeaderLayout>
+                    <DemoSocket/>
                     } />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />

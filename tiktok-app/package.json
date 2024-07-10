@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@stomp/stompjs": "^7.0.0",
     "@tippyjs/react": "^4.2.6",
     "axios": "^1.6.8",
     "classnames": "^2.5.1",
@@ -16,7 +17,12 @@
     "react-icons": "^5.2.1",
     "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
+    "react-stomp": "^5.1.0",
+    "sockjs": "^0.3.24",
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3",
     "web-vitals": "^2.1.4",
+    "websocket": "^1.0.35",
     "yup": "^1.4.0"
   },
   "devDependencies": {
