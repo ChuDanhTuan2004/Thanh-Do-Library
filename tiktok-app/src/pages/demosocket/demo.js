@@ -5,6 +5,7 @@ const SOCKET_URL = 'http://localhost:8080/ws-endpoint';
 
 export default function DemoSocket(){
     const [stompClient, setStompClient] = useState(null);
+
     useEffect(() => {
         const client = new Client({
             brokerURL: "http://localhost:8080/ws-endpoint",
@@ -16,11 +17,14 @@ export default function DemoSocket(){
             },
         });
 
+        client.activate({username: "tung"})
+
         client.onConnect = function (frame) {
-            client.subscribe("/app/chat", message => {
-                console.log(JSON.parse(message.body))
+            client.subscribe("/users/topic/messages", message => {
+                console.log(message.body)
             })
         };
+
         client.onStompError = function (frame) {
             // Will be invoked in case of error encountered at Broker
             // Bad login/passcode typically will cause an error
@@ -29,12 +33,11 @@ export default function DemoSocket(){
             console.log('Broker reported error: ' + frame.headers['message']);
             console.log('Additional details: ' + frame.body);
         };
-        client.activate()
 
         setStompClient(client)
 
         return (() => {
-            client.forceDisconnect();
+            client.deactivate();
         })
     },[]);
 
@@ -43,11 +46,14 @@ export default function DemoSocket(){
     const sendMessage = (e) => {
 
 
-        const chatMessage = {
-            name: message,
-        };
 
-        stompClient.send('/topic/hello', {}, JSON.stringify(chatMessage));
+
+        stompClient.publish({
+            destination: '/app/chat',
+            body: message,
+            skipContentLengthHeader: true,
+        });
+
         setMessage('');
     }
     return (
@@ -55,13 +61,16 @@ export default function DemoSocket(){
             <div className={"flex justify-between items-center"}>
                 <div className={"flex"}>
                     <div className={"mr-2 font-light flex items-center"}>WebSocket connection</div>
-                    <button className={"ml-3 p-3 rounded-sm hover:bg-second_primary-300"} >Connect</button>
+                    <button onClick={(e) => {sendMessage(e)}} className={"ml-3 p-3 rounded-sm hover:bg-second_primary-300"} >Connect</button>
                     <button className={"hover:bg-second_primary-300"}>Disconnect</button>
                 </div>
-                <form className={"flex items-center"} onSubmit={(e) => {sendMessage(e)}}>
+                <form className={"flex items-center"} >
                     <h5 className={"mr-2"}>What is your name ?</h5>
-                    <input value={message} className={"flex-1 border-2"}/>
-                    <button type={"submit"} className={"ml-3 p-3 rounded-sm hover:bg-second_primary-300"}>Connect</button>
+                    <input
+                        value={message}
+                        onChange={e => setMessage(e.target.value)}
+                        className={"flex-1 border-2"}/>
+                    <button  className={"ml-3 p-3 rounded-sm hover:bg-second_primary-300"}>Submit</button>
                 </form>
             </div>
             <div className={"flex flex-col"}>
