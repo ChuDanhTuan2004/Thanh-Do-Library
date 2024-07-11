@@ -8,10 +8,7 @@ import Register from "./pages/Register/register";
 import VerifyEmailPlaceholderPage from "./pages/VerifyEmailPlaceholder/vefifyMailPlaceholderPage";
 import {SnackbarProvider} from "notistack";
 import VerifiedEmail from "./pages/VerifiedEmail/VerifiedEmail";
-import NoHeaderLayout from "./layout/noHeader/noHeaderLayout";
-import Home from "./pages/Home/home";
-import SocketDemo from "./pages/DemoWebsocket/demo";
-import Demo from "./pages/DemoWebsocket/demo";
+import DemoSocket from "./pages/demosocket/demo";
 
 function App() {
 
@@ -19,11 +16,11 @@ function App() {
         <AuthProvider>
             <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
             <Routes>
-                <Route path={"/websocket"} element={<Demo/>} />
                 <Route path="/" element={
-                    <NoHeaderLayout>
-                         <Home/>
-                    </NoHeaderLayout>
+                    // <NoHeaderLayout>
+                    //      <Home/>
+                    // </NoHeaderLayout>
+                    <DemoSocket/>
                     } />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
