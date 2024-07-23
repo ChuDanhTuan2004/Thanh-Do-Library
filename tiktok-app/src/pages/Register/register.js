@@ -6,6 +6,7 @@ import {enqueueSnackbar} from "notistack";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import CusInput from "../../components/input/Input";
+import axios from "axios";
 
 function Register() {
     const {login} = useAuth();
@@ -30,28 +31,28 @@ function Register() {
                 .required("Trường này không được để trống!")
         }),
         onSubmit: values => {
-            const data = JSON.stringify(values, null, 2)
-            userService.doRegister(data)
+            doSubmit(values)
         }
+
     });
     const doSubmit = (data) => {
         setLoading(true)
         const promise = userService.doRegister(data)
-        // promise.then((res) => {
-        //     setLoading(false)
-        //     console.log(res)
-        //     navigate(`/holder?email=${res.data}`, {replace: true} )
-        // }).catch((e) => {
-        //     setLoading(false)
-        //     if (e?.response.data?.email) {
-        //         navigate(`/holder?email=${e.response.data.email}&pending=true`, {replace: true} )
-        //     } else {
-        //         enqueueSnackbar('Email đã tồn tại!', { variant: 'error', anchorOrigin: {
-        //                 vertical: 'top',
-        //                 horizontal: 'right'
-        //             }})
-        //     }
-        // })
+        promise.then((res) => {
+            setLoading(false)
+            console.log(res)
+            navigate(`/holder?email=${res.data}`, {replace: true} )
+        }).catch((e) => {
+            setLoading(false)
+            if (e?.response.data?.email) {
+                navigate(`/holder?email=${e.response.data.email}&pending=true`, {replace: true} )
+            } else {
+                enqueueSnackbar('Email đã tồn tại!', { variant: 'error', anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'right'
+                    }})
+            }
+        })
 
     }
 

@@ -22,8 +22,8 @@ function Login() {
 
         }),
         onSubmit: values => {
-            const data = (JSON.stringify(values, null, 2));
-            login(data)
+            login(values)
+
         }
     });
 

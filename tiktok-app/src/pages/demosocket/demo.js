@@ -1,105 +1,110 @@
-import React, {useEffect, useRef, useState} from 'react';
-import { Client, Message } from '@stomp/stompjs';
+import React, {useEffect, useState} from 'react'
 import SockJS from 'sockjs-client';
-const SOCKET_URL = 'http://localhost:8080/ws-endpoint';
+import {Client} from '@stomp/stompjs'
+import ChatRoom from "../../components/chatRoom/ChatRoom";
 
-export default function DemoSocket(){
-    const [stompClient, setStompClient] = useState(null);
-    const [name, setName] = useState(null)
-    const [message, setMessage] = useState()
-    const [messages, setMessages] = useState()
+
+let stompClient = null;
+const DemoSocket = () => {
+
+    const [userData, setUserData] = useState({
+        username: '',
+        receiverName: '',
+        connected: false,
+        message: ''
+    });
+
     const connect = (e) => {
         e.preventDefault()
-        const client = new Client({
-            brokerURL: "http://localhost:8080/ws-endpoint",
-            webSocketFactory: () => {
-                return new SockJS(SOCKET_URL);
-            },
-            debug: function (str) {
-                console.log(str);
-            },
-        });
-        client.connectHeaders = {
-            username: name
+        stompClient = new Client({
+                brokerURL: "ws://localhost:8080/ws",
+                webSocketFactory: () => {
+                    return new WebSocket("ws://localhost:8080/ws");
+                },
+                debug: function (str) {
+                    console.log(str);
+                },
+            reconnectDelay: 50000,
+            }
+        )
+
+        stompClient.onConnect = (frame) => {
+            stompClient.subscribe('/user/'+userData.username+'/private', (data) => {
+                console.log(data)
+            }, {})
         }
-        client.activate();
 
-        client.onConnect = function (frame) {
-            client.subscribe("/users/topic/messages", message => {
-                console.log(message.body)
-            })
-        };
+        stompClient.activate()
 
-        client.onStompError = function (frame) {
-            console.log('Broker reported error: ' + frame.headers['message']);
-            console.log('Additional details: ' + frame.body);
-        };
-        setStompClient(client)
     }
-
 
     const sendMessage = (e) => {
         e.preventDefault()
+
+        const chatMessage = {
+            senderName: userData.username,
+            receiverName: userData.receiverName,
+            message: userData.message,
+            status:"MESSAGE"
+        };
+
+        console.log(chatMessage)
+
         stompClient.publish({
-            destination: '/app/chat',
-            body: message,
-            skipContentLengthHeader: true,
-        });
+            destination: "/app/private-message",
+            body: JSON.stringify(chatMessage),
+            headers: {}
+            }
+        );
+    };
 
-        setMessage('');
-    }
-
-    const privateConnect = (e) => {
-        e.preventDefault()
-        const client = new Client({
-            brokerURL: "http://localhost:8080/ws-endpoint",
-            webSocketFactory: () => {
-                return new SockJS(SOCKET_URL);
-            },
-            debug: function (str) {
-                console.log(str);
-            },
-        });
-        client.activate();
-
-        client.onConnect = function (frame) {
-            client.subscribe("/users/topic/messages", message => {
-                console.log(message.body)
-            })
-        };
-
-        client.onStompError = function (frame) {
-            console.log('Broker reported error: ' + frame.headers['message']);
-            console.log('Additional details: ' + frame.body);
-        };
-        setStompClient(client)
-
-
-    }
     return (
-        <div className={"w-10/12 mx-auto p-5"}>
-            <div className={"flex justify-between items-center"}>
-                <form className={"flex"} onSubmit={connect}>
-                    <input type={"text"}
-                           value={name}
-                           onChange={(e) => {setName(e.target.value)}}
-                    />
-                    <button
-                        className={"ml-3 p-3 rounded-sm hover:bg-second_primary-300"} >Connect</button>
-                    <button className={"hover:bg-second_primary-300"}>Disconnect</button>
-                </form>
-                <form className={"flex items-center"} onSubmit={(e) => {sendMessage(e)}} >
-                    <input
-                        value={message}
-                        onChange={e => setMessage(e.target.value)}
-                        className={"flex-1 border-2"}/>
-                    <button type={"submit"}  className={"ml-3 p-3 rounded-sm hover:bg-second_primary-300"}>Submit</button>
-                </form>
+        <div>
+            <div className={"w-10/12 mx-auto p-5"}>
+                <div className={"flex justify-between items-center"}>
+                    <form className={"flex"} onSubmit={connect}>
+                        <input type={"text"}
+                               value={userData.username}
+                               onChange={(e) => {
+                                   setUserData({...userData, username: e.target.value});
+                               }}
+                        />
+                        <button
+                            className={"ml-3 p-3 rounded-sm hover:bg-second_primary-300"}>Connect
+                        </button>
+                    </form>
+                    <form className={"flex items-center"} onSubmit={(e) => {
+                        sendMessage(e)
+                    }}>
+                        <input
+                            value={userData.receiverName}
+                            placeholder={"receiver"}
+                            onChange={(e) => {
+                                setUserData({...userData, receiverName: e.target.value})
+                            }}
+                            className={"flex-1 border-2"}/>
+                        <input
+                            value={userData.message}
+                            placeholder={"Message"}
+                            onChange={(e) => {
+                                setUserData({...userData, message: e.target.value});
+                            }}
+                            className={"flex-1 border-2"}/>
+                        <button type={"submit"} className={"ml-3 p-3 rounded-sm hover:bg-second_primary-300"}>Submit
+                        </button>
+                    </form>
+                </div>
+                <div className={"flex flex-col"}>
+                    <h5>Greetings</h5>
+                    <p>Hello</p>
+                </div>
             </div>
-            <div className={"flex flex-col"}>
-            <h5>Greetings</h5>
-                <p>Hello</p>
+            <div>
+                <ChatRoom />
             </div>
         </div>
+
     )
 }
+
+export default DemoSocket

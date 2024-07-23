@@ -1,20 +1,15 @@
 import {FaComment} from "react-icons/fa";
 import "./threadMessage.scss"
 
-export default function ThreadMessage({reactIcon, title, image, noti, selected, setTitle }){
-    const onClickFunc = () => {
-        if (setTitle) {
-            setTitle(title);
-        }
-    }
+export default function ThreadMessage({reactIcon, title, image, noti, selected, setTitle, disabled, onClickTitle }){
 
     return (
-            <div onClick={onClickFunc} className={`p-3 items-center threadMessage flex rounded my-1 hover:bg-second_primary-800 hover:cursor-pointer ${selected ? "bg-second_primary-600" : ""}`}>
+            <div onClick={onClickTitle} className={`p-3 items-center threadMessage flex rounded my-1 ${disabled? "" : "hover:bg-second_primary-800 hover:cursor-pointer"} ${selected ? "bg-second_primary-600" : ""}`}>
                 {image ?
                     <img
                         alt={"thread Image"}
                         src={image}
-                        className={" size-9 flex justify-center items-center rounded-xl"}
+                        className={"size-9 flex justify-center items-center rounded-xl"}
                     />
                     :
                     <div className={" size-9 flex justify-center items-center rounded-xl"}>

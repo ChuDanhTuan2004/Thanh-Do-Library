@@ -1,19 +1,17 @@
-import { Navigate } from "react-router-dom";
+import {Navigate, useLocation, Outlet} from "react-router-dom";
 import {useAuth} from "./AuthContext";
 
-export const ProtectedRoute = ({ children , roles}) => {
-  const { user } = useAuth();
+export const ProtectedRoute = ({children, roles, redirectPath}) => {
+    const {user} = useAuth();
+    if (!user) {
+        return <Navigate to={redirectPath}/>;
+    }
+    if (roles && !haveRole(user.user.roles, roles)) {
+        return <Navigate to={redirectPath} />;
+    }
 
-  if (!user) {
-    // user is not authenticated
-    return <Navigate to="/login" />;
-  }
-
-  if (haveRole(user.roles, roles)) {}
-  return children;
+    return children ? children : <Outlet/>;
 };
-
-function haveRole(userRoles, roles){
-  console.log(userRoles + roles)
-  return true;
+function haveRole(userRoles, roles) {
+    return userRoles.some(userRole => roles.includes(userRole.name));
 }

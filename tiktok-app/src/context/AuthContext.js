@@ -13,7 +13,7 @@ export const AuthProvider = ({children}) => {
     // call this function when you want to authenticate the user
     const login = async (userForm) => {
         const promise =  userService.doLogin(userForm);
-        promise.then(res => {
+        return  promise.then(res => {
             setUser(res.data);
             navigate("/secret");
         }).catch(e => {

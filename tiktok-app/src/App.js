@@ -9,6 +9,9 @@ import VerifyEmailPlaceholderPage from "./pages/VerifyEmailPlaceholder/vefifyMai
 import {SnackbarProvider} from "notistack";
 import VerifiedEmail from "./pages/VerifiedEmail/VerifiedEmail";
 import DemoSocket from "./pages/demosocket/demo";
+import SecondDemo from "./pages/demosocket/secondDemo";
+import NoHeaderLayout from "./layout/noHeader/noHeaderLayout";
+import Home from "./pages/Home/home";
 
 function App() {
 
@@ -17,23 +20,18 @@ function App() {
             <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
             <Routes>
                 <Route path="/" element={
-                    // <NoHeaderLayout>
-                    //      <Home/>
-                    // </NoHeaderLayout>
-                    <DemoSocket/>
+                    <NoHeaderLayout>
+                          <Home/>
+                    </NoHeaderLayout>
                     } />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/holder" element={<VerifyEmailPlaceholderPage />} />
                 <Route path="/verifyEmail" element={<VerifiedEmail />} />
-                <Route
-                    path="/secret"
-                    element={
-                        <ProtectedRoute>
-                            <Secret />
-                        </ProtectedRoute>
-                    }
-                />
+                <Route element={
+                    <ProtectedRoute redirectPath={"/login"} roles={["ROLE_USER"]} />} >
+                    <Route path={"/secret"} element={<Secret/>} />
+                </Route>
             </Routes>
                 </SnackbarProvider>
         </AuthProvider>
