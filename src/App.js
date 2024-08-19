@@ -8,6 +8,11 @@ import HomePage from './components/HomePage';
 import Login from './components/Login';
 import ClientPage from './components/ClientPage';
 
+const ROLES = {
+  'User': 2001,
+  'Admin': 5150
+}
+
 function App() {
   return (
     <Routes>
