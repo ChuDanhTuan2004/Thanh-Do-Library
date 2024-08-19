@@ -47,7 +47,7 @@ export default function Login() {
                             />
                         </div>
                     </div>
-                    <div className="mb-6">
+                    {/* <div className="mb-6">
                         <label htmlFor="verificationCode" className="block text-sm font-semibold text-[#0b328f] mb-2">Mã Xác Nhận</label>
                         <div className="flex items-center border border-gray-300 rounded-lg bg-gray-50">
                             <IoMdLock size={20} className="text-gray-500 mx-3" />
@@ -61,7 +61,7 @@ export default function Login() {
                                 required
                             />
                         </div>
-                    </div>
+                    </div> */}
                     <button
                         type="submit"
                         className="w-full bg-[#0b328f] text-white px-4 py-2 rounded-lg hover:bg-[#08367b] focus:outline-none transition duration-300"
