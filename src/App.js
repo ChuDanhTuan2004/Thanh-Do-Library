@@ -7,12 +7,14 @@ import Document from './components/Document';
 import HomePage from './components/HomePage';
 import Login from './components/Login';
 import ClientPage from './components/ClientPage';
+import Register from './components/Register';
 
 function App() {
   return (
     <Routes>
       <Route path='/library/home' element={<HomePage />} />
       <Route path='/library/login' element={<Login />} />
+      <Route path='/library/register' element={<Register />} />
       {/* client */}
       <Route path='/library/client' element={<ClientPage />} />
       {/* admin */}

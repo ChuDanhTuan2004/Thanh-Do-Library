@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { FaLock, FaUser } from 'react-icons/fa';
-import { IoMdLock } from 'react-icons/io';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
     const [studentId, setStudentId] = useState('');
     const [password, setPassword] = useState('');
-    const [verificationCode, setVerificationCode] = useState('');
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -47,21 +46,6 @@ export default function Login() {
                             />
                         </div>
                     </div>
-                    <div className="mb-6">
-                        <label htmlFor="verificationCode" className="block text-sm font-semibold text-[#0b328f] mb-2">Mã Xác Nhận</label>
-                        <div className="flex items-center border border-gray-300 rounded-lg bg-gray-50">
-                            <IoMdLock size={20} className="text-gray-500 mx-3" />
-                            <input
-                                id="verificationCode"
-                                type="text"
-                                value={verificationCode}
-                                onChange={(e) => setVerificationCode(e.target.value)}
-                                className="flex-1 p-2 border-none rounded-lg bg-gray-50 focus:outline-none"
-                                placeholder="Nhập mã xác nhận"
-                                required
-                            />
-                        </div>
-                    </div>
                     <button
                         type="submit"
                         className="w-full bg-[#0b328f] text-white px-4 py-2 rounded-lg hover:bg-[#08367b] focus:outline-none transition duration-300"
@@ -69,6 +53,14 @@ export default function Login() {
                         Đăng Nhập
                     </button>
                 </form>
+                <div className="mt-6 text-center">
+                    <p className="text-sm text-gray-600">
+                        Chưa có tài khoản?{' '}
+                        <Link to="/library/register" className="text-[#0b328f] hover:underline">
+                            Đăng ký ngay
+                        </Link>
+                    </p>
+                </div>
             </div>
         </div>
     );
