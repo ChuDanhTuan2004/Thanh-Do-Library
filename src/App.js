@@ -1,5 +1,5 @@
 import './App.css';
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Dashboard from './components/Dashboard';
 import Category from './components/Category';
 import UserManagement from './components/UserManagement';
@@ -12,6 +12,7 @@ import Register from './components/Register';
 function App() {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/library/home" />} />
       <Route path='/library/home' element={<HomePage />} />
       <Route path='/library/login' element={<Login />} />
       <Route path='/library/register' element={<Register />} />
