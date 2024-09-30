@@ -119,15 +119,18 @@ export default function UserManagement() {
             <div className="flex-1 p-10 space-y-6">
                 <h1 className="text-2xl font-bold">Quản lý người dùng</h1>
 
-                <div className="bg-white shadow-md rounded p-6 mb-6 flex items-center space-x-4">
-                    <FiSearch size={20} className="text-gray-500" />
-                    <input
-                        type="text"
-                        placeholder="Tìm kiếm theo tên..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full border border-gray-300 rounded p-2"
-                    />
+                {/* Thanh tìm kiếm */}
+                <div className="bg-white shadow-md rounded p-6 mb-6">
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm theo tên..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full border border-gray-300 rounded-full py-2 pl-10 pr-4"
+                        />
+                        <FiSearch size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+                    </div>
                 </div>
 
                 <div className="bg-white shadow-md rounded p-6">
