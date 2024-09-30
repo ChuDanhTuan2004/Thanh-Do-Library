@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FiMenu, FiPlus, FiEdit, FiTrash, FiSearch, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiMenu, FiPlus, FiEdit, FiTrash, FiSearch, FiChevronLeft, FiChevronRight, FiFileText } from 'react-icons/fi';
 import Sidebar from './Sidebar';
 import Modal from './Modal';
 import DocumentForm from './DocumentForm';
@@ -9,7 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';
 const mockDocuments = Array.from({ length: 30 }, (_, i) => ({
     id: i + 1,
     title: `Tài liệu ${i + 1}`,
-    description: `Mô tả cho tài liệu ${i + 1}`
+    description: `Mô tả cho tài liệu ${i + 1}`,
+    link: `https://drive.google.com/file/d/15fiGYz5PIq3Sq37RRksoZRLx9L8kJKet/view?usp=sharing`
 }));
 
 export default function Document() {
@@ -99,15 +100,17 @@ export default function Document() {
                 <h1 className="text-2xl font-bold mb-4">Quản lý tài liệu</h1>
 
                 {/* Thanh tìm kiếm */}
-                <div className="bg-white shadow-md rounded p-6 mb-6 flex items-center space-x-4">
-                    <FiSearch size={20} className="text-gray-500" />
-                    <input
-                        type="text"
-                        placeholder="Tìm kiếm tài liệu..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full border border-gray-300 rounded p-2 ml-2"
-                    />
+                <div className="bg-white shadow-md rounded p-6 mb-6">
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm tài liệu..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full border border-gray-300 rounded-full py-2 pl-10 pr-4"
+                        />
+                        <FiSearch size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+                    </div>
                 </div>
 
                 {/* Danh sách tài liệu */}
@@ -129,9 +132,18 @@ export default function Document() {
                                     <p className="text-gray-600">{doc.description}</p>
                                 </div>
                                 <div className="flex space-x-4">
+                                    {/* đọc tài liệu */}
+                                    <button
+                                        onClick={() => window.open(doc.link, '_blank', 'noopener,noreferrer')}
+                                        className="text-green-600 hover:text-green-800"
+                                    >
+                                        <FiFileText size={20} />
+                                    </button>
+                                    {/* chỉnh sửa thông tin */}
                                     <button onClick={() => handleEditDocument(doc)} className="text-blue-600 hover:text-blue-800">
                                         <FiEdit size={20} />
                                     </button>
+                                    {/* xóa */}
                                     <button onClick={() => handleDeleteDocument(doc.id)} className="text-red-600 hover:text-red-800">
                                         <FiTrash size={20} />
                                     </button>
