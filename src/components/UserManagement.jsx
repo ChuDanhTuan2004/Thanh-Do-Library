@@ -1,6 +1,6 @@
 // UserManagement.js
-import React, { useRef, useState, useEffect } from 'react';
-import { FiMenu, FiEdit, FiTrash, FiChevronLeft, FiChevronRight, FiPlus, FiSearch } from 'react-icons/fi';
+import React, { useState, useRef, useEffect } from 'react';
+import { FiMenu, FiPlus, FiEdit, FiTrash, FiSearch, FiChevronLeft, FiChevronRight, FiUser, FiMoreVertical } from 'react-icons/fi';
 import Sidebar from './Sidebar';
 import Modal from './Modal';
 import UserForm from './UserForm';
@@ -10,35 +10,29 @@ import 'react-toastify/dist/ReactToastify.css';
 const mockUsers = [
     { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin' },
     { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User' },
-    { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'Editor' },
-    { id: 4, name: 'Alice Brown', email: 'alice@example.com', role: 'User' },
-    { id: 5, name: 'Michael White', email: 'michael@example.com', role: 'Admin' },
-    { id: 6, name: 'Jennifer Blue', email: 'jennifer@example.com', role: 'Editor' },
-    { id: 7, name: 'Paul Green', email: 'paul@example.com', role: 'User' },
-    { id: 8, name: 'Laura Red', email: 'laura@example.com', role: 'User' },
-    { id: 9, name: 'Mark Black', email: 'mark@example.com', role: 'User' },
-    { id: 10, name: 'Susan Yellow', email: 'susan@example.com', role: 'User' },
-    // Add more mock users as needed
+    // ... thêm các người dùng khác
 ];
 
 export default function UserManagement() {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [users, setUsers] = useState(mockUsers);
+    const [searchQuery, setSearchQuery] = useState('');
     const [newUser, setNewUser] = useState({ name: '', email: '', role: '' });
     const [isEditing, setIsEditing] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [usersPerPage] = useState(5);
+    const [selectedUsers, setSelectedUsers] = useState({});
+
+    const itemsPerPage = 5;
+
+    const filteredUsers = users.filter(user =>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
     const sidebarRef = useRef();
-
-    const handleClickOutside = (event) => {
-        if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-            setIsSidebarOpen(false);
-        }
-    };
 
     useEffect(() => {
         if (isSidebarOpen) {
@@ -51,146 +45,194 @@ export default function UserManagement() {
         };
     }, [isSidebarOpen]);
 
-    const indexOfLastUser = currentPage * usersPerPage;
-    const indexOfFirstUser = indexOfLastUser - usersPerPage;
-    const filteredUsers = users.filter(user =>
-        user.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
-    const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
-
-    const handleChange = (field, value) => {
-        setNewUser({ ...newUser, [field]: value });
-    };
-
-    const addUser = () => {
-        if (newUser.name && newUser.email && newUser.role) {
-            setUsers([...users, { ...newUser, id: users.length + 1 }]);
-            setNewUser({ name: '', email: '', role: '' });
-            setIsModalOpen(false);
-            toast.success('Người dùng đã được thêm thành công!');
-        } else {
-            toast.error('Vui lòng điền đầy đủ thông tin người dùng!');
+    const handleClickOutside = (event) => {
+        if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+            setIsSidebarOpen(false);
         }
     };
 
-    const editUser = (user) => {
+    const handleAddUser = () => {
+        const newUserWithId = { ...newUser, id: users.length + 1 };
+        setUsers([...users, newUserWithId]);
+        resetForm();
+        toast.success('Người dùng đã được thêm thành công!');
+    };
+
+    const handleEditUser = (user) => {
         setEditingUser(user);
         setIsEditing(true);
         setNewUser({ name: user.name, email: user.email, role: user.role });
         setIsModalOpen(true);
     };
 
-    const saveEdit = () => {
+    const handleSaveEdit = () => {
         setUsers(users.map(user => user.id === editingUser.id ? { ...user, ...newUser } : user));
-        setIsEditing(false);
-        setNewUser({ name: '', email: '', role: '' });
-        setIsModalOpen(false);
+        resetForm();
         toast.success('Người dùng đã được chỉnh sửa thành công!');
     };
 
-    const deleteUser = (id) => {
+    const handleDeleteUser = (id) => {
         setUsers(users.filter(user => user.id !== id));
         toast.success('Người dùng đã được xóa thành công!');
     };
 
-    const goToNextPage = () => {
-        if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
+    const resetForm = () => {
+        setIsEditing(false);
+        setNewUser({ name: '', email: '', role: '' });
+        setIsModalOpen(false);
+    };
+
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= totalPages) {
+            setCurrentPage(newPage);
         }
     };
 
-    const goToPreviousPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
+    const paginatedUsers = filteredUsers.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const handleSelectAll = (event) => {
+        const isChecked = event.target.checked;
+        const newSelectedUsers = { ...selectedUsers };
+        paginatedUsers.forEach(user => {
+            newSelectedUsers[user.id] = isChecked;
+        });
+        setSelectedUsers(newSelectedUsers);
     };
+
+    const handleSelectUser = (id) => {
+        setSelectedUsers(prev => ({
+            ...prev,
+            [id]: !prev[id]
+        }));
+    };
+
+    const isAllSelected = paginatedUsers.every(user => selectedUsers[user.id]);
 
     return (
-        <div className="flex min-h-screen bg-gray-100">
-            <Sidebar isOpen={isSidebarOpen} sidebarRef={sidebarRef} />
-            {/* Menu button for mobile */}
-            <div className="md:hidden">
-                <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="m-2 p-2 rounded bg-gray-800 text-white focus:outline-none">
-                    <FiMenu size={24} />
-                </button>
-            </div>
-
-            <div className="flex-1 p-10 space-y-6">
-                <h1 className="text-2xl font-bold">Quản lý người dùng</h1>
+        <div className="p-6 bg-gray-50 min-h-screen rounded-md">
+            {/* Nội dung chính */}
+            <div className="flex-1 p-4 lg:p-6 space-y-4 lg:space-y-6 overflow-x-auto">
+                <h1 className="text-2xl font-semibold text-gray-900 mb-2">Quản lý người dùng</h1>
 
                 {/* Thanh tìm kiếm */}
-                <div className="bg-white shadow-md rounded p-6 mb-6">
+                <div className="mb-4 lg:mb-6">
                     <div className="relative">
                         <input
                             type="text"
-                            placeholder="Tìm kiếm theo tên..."
+                            placeholder="Tìm kiếm người dùng..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full border border-gray-300 rounded-full py-2 pl-10 pr-4"
+                            className="w-full bg-white border border-gray-300 rounded-md py-2 pl-10 pr-4 text-gray-700 placeholder-gray-500"
                         />
-                        <FiSearch size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+                        <FiSearch size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     </div>
                 </div>
 
-                <div className="bg-white shadow-md rounded p-6">
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-xl">Danh sách người dùng</h2>
-                        <button
-                            onClick={() => { setIsEditing(false); setIsModalOpen(true); }}
-                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center"
-                        >
-                            <FiPlus size={20} className="mr-1" /> Thêm người dùng
-                        </button>
-                    </div>
-                    <ul className="grid grid-cols-1 gap-4">
-                        {currentUsers.map(user => (
-                            <li key={user.id} className="flex justify-between items-center py-2 border-b border-gray-200">
-                                <div>
-                                    <p className="text-lg font-semibold">{user.name}</p>
-                                    <p className="text-gray-600">{user.role}</p>
-                                </div>
-                                <div className="flex space-x-4">
-                                    <button onClick={() => editUser(user)} className="text-blue-600 hover:text-blue-800">
-                                        <FiEdit size={20} />
-                                    </button>
-                                    <button onClick={() => deleteUser(user.id)} className="text-red-600 hover:text-red-800">
-                                        <FiTrash size={20} />
-                                    </button>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                    <div className="flex justify-between items-center mt-4">
-                        <button
-                            onClick={goToPreviousPage}
-                            disabled={currentPage === 1}
-                            className={`p-2 rounded ${currentPage === 1 ? 'text-gray-400' : 'text-gray-700 hover:text-gray-900'}`}
-                        >
-                            <FiChevronLeft size={20} />
-                        </button>
-                        <span>Trang {currentPage} / {totalPages}</span>
-                        <button
-                            onClick={goToNextPage}
-                            disabled={currentPage === totalPages}
-                            className={`p-2 rounded ${currentPage === totalPages ? 'text-gray-400' : 'text-gray-700 hover:text-gray-900'}`}
-                        >
-                            <FiChevronRight size={20} />
-                        </button>
+                {/* Danh sách người dùng */}
+                <div className="bg-white rounded-md shadow-md overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                            <tr className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="p-4">
+                                    <input 
+                                        type="checkbox" 
+                                        className="rounded border-gray-300 text-blue-600"
+                                        checked={isAllSelected}
+                                        onChange={handleSelectAll}
+                                    />
+                                </th>
+                                <th className="p-4">ID</th>
+                                <th className="p-4">Tên</th>
+                                <th className="p-4 hidden sm:table-cell">Email</th>
+                                <th className="p-4 hidden md:table-cell">Vai trò</th>
+                                <th className="p-4">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {paginatedUsers.map(user => (
+                                <tr key={user.id} className="hover:bg-gray-50">
+                                    <td className="p-4">
+                                        <input 
+                                            type="checkbox" 
+                                            className="rounded border-gray-300 text-blue-600"
+                                            checked={selectedUsers[user.id] || false}
+                                            onChange={() => handleSelectUser(user.id)}
+                                        />
+                                    </td>
+                                    <td className="p-4 text-gray-500">USER-{user.id.toString().padStart(4, '0')}</td>
+                                    <td className="p-4">{user.name}</td>
+                                    <td className="p-4 hidden sm:table-cell">{user.email}</td>
+                                    <td className="p-4 hidden md:table-cell">
+                                        <span className="px-2 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-semibold">{user.role}</span>
+                                    </td>
+                                    <td className="p-4">
+                                        <button
+                                            className="text-gray-400 hover:text-gray-600"
+                                            onClick={() => handleEditUser(user)}
+                                        >
+                                            <FiMoreVertical />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                {/* Điều khiển phân trang */}
+                <div className="flex flex-col sm:flex-row justify-between items-center mt-4 text-gray-600 space-y-2 sm:space-y-0">
+                    <span className="text-sm">{Object.values(selectedUsers).filter(Boolean).length} trên {filteredUsers.length} hàng được chọn.</span>
+                    <div className="flex items-center space-x-2 text-sm">
+                        <span className="hidden sm:inline">Số hàng mỗi trang: {itemsPerPage}</span>
+                        <span>Trang {currentPage} trên {totalPages}</span>
+                        <div className="flex space-x-1">
+                            <button 
+                                onClick={() => handlePageChange(1)} 
+                                className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                disabled={currentPage === 1}
+                            >
+                                &lt;&lt;
+                            </button>
+                            <button 
+                                onClick={() => handlePageChange(currentPage - 1)} 
+                                className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                disabled={currentPage === 1}
+                            >
+                                &lt;
+                            </button>
+                            <button 
+                                onClick={() => handlePageChange(currentPage + 1)} 
+                                className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                disabled={currentPage === totalPages}
+                            >
+                                &gt;
+                            </button>
+                            <button 
+                                onClick={() => handlePageChange(totalPages)} 
+                                className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                disabled={currentPage === totalPages}
+                            >
+                                &gt;&gt;
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <Modal isOpen={isModalOpen} onClose={() => { setIsEditing(false); setNewUser({ name: '', email: '', role: '' }); setIsModalOpen(false); }}>
+                {/* Modal thêm/chỉnh sửa người dùng */}
+                <Modal isOpen={isModalOpen} onClose={resetForm}>
                     <UserForm
                         user={newUser}
-                        onChange={handleChange}
-                        onSubmit={isEditing ? saveEdit : addUser}
-                        onCancel={() => { setIsEditing(false); setNewUser({ name: '', email: '', role: '' }); setIsModalOpen(false); }}
+                        onChange={(e) => setNewUser({ ...newUser, [e.target.name]: e.target.value })}
+                        onSubmit={isEditing ? handleSaveEdit : handleAddUser}
+                        onCancel={resetForm}
                         isEditing={isEditing}
                     />
                 </Modal>
 
-                {/* Add ToastContainer here */}
+                {/* Toast Container */}
                 <ToastContainer />
             </div>
         </div>

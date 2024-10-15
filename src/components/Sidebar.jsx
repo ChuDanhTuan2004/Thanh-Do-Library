@@ -1,76 +1,64 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiHome, FiFolder, FiFileText, FiUsers, FiLogOut, FiHelpCircle } from 'react-icons/fi';
+import { Home, FolderKanban, FileText, Users, HelpCircle, X } from 'lucide-react';
 
-export default function Sidebar({ isOpen, sidebarRef, currentUser, onLogout }) {
+export default function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
   const path = location.pathname;
 
   const navItems = [
-    { to: '/dashboard/home', label: 'Trang chủ', icon: <FiHome size={20} /> },
-    { to: '/dashboard/categories', label: 'Danh mục', icon: <FiFolder size={20} /> },
-    { to: '/dashboard/documents', label: 'Tài liệu', icon: <FiFileText size={20} /> },
-    { to: '/dashboard/users', label: 'Người dùng', icon: <FiUsers size={20} /> },
+    { to: '/dashboard/home', label: 'Trang chủ', icon: Home },
+    { to: '/dashboard/categories', label: 'Danh mục', icon: FolderKanban },
+    { to: '/dashboard/documents', label: 'Tài liệu', icon: FileText },
+    { to: '/dashboard/users', label: 'Người dùng', icon: Users },
   ];
 
-  const renderNavItem = (item) => (
-    <Link
-      key={item.to}
-      to={item.to}
-      className={`flex items-center py-2.5 px-4 rounded transition duration-200 ${
-        path === item.to ? 'bg-[#faa21a] text-white' : 'hover:bg-gray-700 hover:text-white'
-      }`}
-    >
-      {item.icon}
-      <span className="ml-3">{item.label}</span>
-    </Link>
-  );
+  const renderNavItem = (item) => {
+    const Icon = item.icon;
+    return (
+      <Link
+        key={item.to}
+        to={item.to}
+        className={`flex items-center py-2 px-4 rounded-md transition-colors duration-200 ${
+          path === item.to ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+        }`}
+        onClick={onClose}
+      >
+        <Icon className="h-5 w-5" />
+        <span className="ml-3 text-sm font-medium">{item.label}</span>
+      </Link>
+    );
+  };
 
   return (
-    <div
-      ref={sidebarRef}
-      className={`bg-[#0b328f] text-white w-72 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform ${
+    <>
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-gray-600 bg-opacity-50 z-40 transition-opacity duration-300 ease-in-out"
+          onClick={onClose}
+        ></div>
+      )}
+      <div className={`fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
-      } md:relative md:translate-x-0 transition duration-200 ease-in-out`}
-    >
-      {/* Logo */}
-      <div className="text-2xl font-bold text-center mb-6">
-        Thanh Do University
-      </div>
-
-      {/* Navigation */}
-      <nav>
-        {navItems.map(renderNavItem)}
-      </nav>
-
-      {/* Account Information */}
-      <div className="absolute bottom-0 left-0 w-full p-4 bg-[#0b328f] text-gray-300 flex flex-col items-start">
-        <div className="flex items-center mb-4 pr-4">
-          <div className="w-10 h-10 border-2 border-[#faa21a] rounded-full flex items-center justify-center text-white text-xl ml-2">
-            A
-          </div>
-          <div className="ml-3">
-            <p className="font-semibold">{currentUser?.name || 'Admin Name'}</p>
-            <p className="text-sm text-gray-200">{currentUser?.email || 'admin@example.com'}</p>
-          </div>
+      }`}>
+        <div className="flex justify-between items-center p-4">
+          <h2 className="text-xl font-semibold">Menu</h2>
+          <button onClick={onClose}>
+            <X className="h-6 w-6" />
+          </button>
         </div>
-
-        <button
-          onClick={onLogout}
-          className="flex items-center py-2 px-4 rounded w-full bg-black text-white hover:bg-[#f8a020] transition duration-200"
-        >
-          <FiLogOut className="mr-3" size={20} />
-          Đăng xuất
-        </button>
-
+        <nav className="flex-1 space-y-1 px-2 py-4">
+          {navItems.map(renderNavItem)}
+        </nav>
         <Link
           to="/help"
-          className="flex items-center py-2 px-4 rounded w-full mt-2 bg-black text-white hover:bg-[#f8a020] transition duration-200"
+          className="flex items-center py-2 px-4 rounded-md m-2 bg-gray-100 text-gray-900 hover:bg-gray-200 transition-colors duration-200"
+          onClick={onClose}
         >
-          <FiHelpCircle className="mr-3" size={20} />
-          Trợ giúp
+          <HelpCircle className="h-5 w-5 mr-3" />
+          <span className="text-sm font-medium">Trợ giúp</span>
         </Link>
       </div>
-    </div>
+    </>
   );
 }

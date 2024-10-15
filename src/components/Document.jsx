@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FiMenu, FiPlus, FiEdit, FiTrash, FiSearch, FiChevronLeft, FiChevronRight, FiFileText } from 'react-icons/fi';
+import { FiMenu, FiPlus, FiEdit, FiTrash, FiSearch, FiChevronLeft, FiChevronRight, FiFileText, FiMoreVertical } from 'react-icons/fi';
 import Sidebar from './Sidebar';
 import Modal from './Modal';
 import DocumentForm from './DocumentForm';
@@ -21,11 +21,17 @@ export default function Document() {
     const [editingDocument, setEditingDocument] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [selectedDocuments, setSelectedDocuments] = useState({});
 
     const itemsPerPage = 5;
-    const totalPages = Math.ceil(documents.length / itemsPerPage);
-    const pagesVisited = currentPage * itemsPerPage;
+
+    // Đặt filteredDocuments trước khi sử dụng
+    const filteredDocuments = documents.filter(doc =>
+        doc.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const totalPages = Math.ceil(filteredDocuments.length / itemsPerPage);
 
     const sidebarRef = useRef();
 
@@ -45,10 +51,6 @@ export default function Document() {
             setIsSidebarOpen(false);
         }
     };
-
-    const filteredDocuments = documents.filter(doc =>
-        doc.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
 
     const handleAddDocument = () => {
         const newDoc = { ...newDocument, id: documents.length + 1 };
@@ -80,95 +82,151 @@ export default function Document() {
         setIsModalOpen(false);
     };
 
-    const handlePageChange = (selectedPage) => {
-        setCurrentPage(selectedPage.selected !== undefined ? selectedPage.selected : selectedPage);
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= totalPages) {
+            setCurrentPage(newPage);
+        }
     };
 
+    const paginatedDocuments = filteredDocuments.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const handleEditClick = (doc) => {
+        setEditingDocument(doc);
+        setIsEditing(true);
+        setNewDocument({ title: doc.title, description: doc.description });
+        setIsModalOpen(true);
+    };
+
+    const handleSelectAll = (event) => {
+        const isChecked = event.target.checked;
+        const newSelectedDocuments = { ...selectedDocuments };
+        paginatedDocuments.forEach(doc => {
+            newSelectedDocuments[doc.id] = isChecked;
+        });
+        setSelectedDocuments(newSelectedDocuments);
+    };
+
+    const handleSelectDocument = (id) => {
+        setSelectedDocuments(prev => ({
+            ...prev,
+            [id]: !prev[id]
+        }));
+    };
+
+    const isAllSelected = paginatedDocuments.every(doc => selectedDocuments[doc.id]);
+
     return (
-        <div className="flex min-h-screen bg-gray-100">
-            <Sidebar isOpen={isSidebarOpen} sidebarRef={sidebarRef} />
-
-            {/* Nút menu cho mobile */}
-            <div className="md:hidden">
-                <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="m-2 p-2 rounded bg-gray-800 text-white focus:outline-none">
-                    <FiMenu size={24} />
-                </button>
-            </div>
-
+        <div className="p-6 bg-gray-50 min-h-screen rounded-md">
             {/* Nội dung chính */}
-            <div className="flex-1 p-10 space-y-6">
-                <h1 className="text-2xl font-bold mb-4">Quản lý tài liệu</h1>
+            <div className="flex-1 lg:p-6 space-y-4 lg:space-y-6 overflow-x-auto">
+                <h1 className="text-2xl font-semibold text-gray-900 mb-2">Quản lý tài liệu</h1>
 
                 {/* Thanh tìm kiếm */}
-                <div className="bg-white shadow-md rounded p-6 mb-6">
+                <div className="mb-4 lg:mb-6">
                     <div className="relative">
                         <input
                             type="text"
                             placeholder="Tìm kiếm tài liệu..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full border border-gray-300 rounded-full py-2 pl-10 pr-4"
+                            className="w-full bg-white border border-gray-300 rounded-md py-2 pl-10 pr-4 text-gray-700 placeholder-gray-500"
                         />
-                        <FiSearch size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+                        <FiSearch size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     </div>
                 </div>
 
                 {/* Danh sách tài liệu */}
-                <div className="bg-white shadow-md rounded p-6">
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-xl">Danh sách tài liệu</h2>
-                        <button
-                            onClick={() => { setIsEditing(false); setIsModalOpen(true); }}
-                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center"
-                        >
-                            <FiPlus size={20} /> Thêm tài liệu
-                        </button>
-                    </div>
-                    <ul>
-                        {filteredDocuments.slice(pagesVisited, pagesVisited + itemsPerPage).map(doc => (
-                            <li key={doc.id} className="flex justify-between items-center py-2 border-b border-gray-200">
-                                <div>
-                                    <p className="text-lg font-semibold">{doc.title}</p>
-                                    <p className="text-gray-600">{doc.description}</p>
-                                </div>
-                                <div className="flex space-x-4">
-                                    {/* đọc tài liệu */}
-                                    <button
-                                        onClick={() => window.open(doc.link, '_blank', 'noopener,noreferrer')}
-                                        className="text-green-600 hover:text-green-800"
-                                    >
-                                        <FiFileText size={20} />
-                                    </button>
-                                    {/* chỉnh sửa thông tin */}
-                                    <button onClick={() => handleEditDocument(doc)} className="text-blue-600 hover:text-blue-800">
-                                        <FiEdit size={20} />
-                                    </button>
-                                    {/* xóa */}
-                                    <button onClick={() => handleDeleteDocument(doc.id)} className="text-red-600 hover:text-red-800">
-                                        <FiTrash size={20} />
-                                    </button>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
+                <div className="bg-white rounded-md shadow-md overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                            <tr className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="p-4">
+                                    <input
+                                        type="checkbox"
+                                        className="rounded border-gray-300 text-blue-600"
+                                        checked={isAllSelected}
+                                        onChange={handleSelectAll}
+                                    />
+                                </th>
+                                <th className="p-4">Mã tài liệu</th>
+                                <th className="p-4">Tên tài liệu</th>
+                                <th className="p-4 hidden sm:table-cell">Loại</th>
+                                <th className="p-4 hidden md:table-cell">Trạng thái</th>
+                                <th className="p-4">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {paginatedDocuments.map(doc => (
+                                <tr key={doc.id} className="hover:bg-gray-50">
+                                    <td className="p-4">
+                                        <input
+                                            type="checkbox"
+                                            className="rounded border-gray-300 text-blue-600"
+                                            checked={selectedDocuments[doc.id] || false}
+                                            onChange={() => handleSelectDocument(doc.id)}
+                                        />
+                                    </td>
+                                    <td className="p-4 text-gray-500">TASK-{doc.id.toString().padStart(4, '0')}</td>
+                                    <td className="p-4">{doc.title}</td>
+                                    <td className="p-4 hidden sm:table-cell">
+                                        <span className="px-2 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-semibold">Tài liệu</span>
+                                    </td>
+                                    <td className="p-4 hidden md:table-cell">
+                                        <span className="px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 text-xs font-semibold">Đang thực hiện</span>
+                                    </td>
+                                    <td className="p-4">
+                                        <button
+                                            className="text-gray-400 hover:text-gray-600"
+                                            onClick={() => handleEditClick(doc)}
+                                        >
+                                            <FiMoreVertical />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
-                    {/* Điều khiển phân trang */}
-                    <div className="flex justify-between items-center mt-4">
-                        <button
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 0}
-                            className="px-4 py-2 rounded disabled:opacity-50"
-                        >
-                            <FiChevronLeft size={20} />
-                        </button>
-                        <span>Trang {currentPage + 1} của {totalPages}</span>
-                        <button
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage + 1 >= totalPages}
-                            className="px-4 py-2 rounded disabled:opacity-50"
-                        >
-                            <FiChevronRight size={20} />
-                        </button>
+                {/* Điều khiển phân trang */}
+                <div className="flex flex-col sm:flex-row justify-between items-center mt-4 text-gray-600 space-y-2 sm:space-y-0">
+                    <span className="text-sm">{Object.values(selectedDocuments).filter(Boolean).length} trên {filteredDocuments.length} hàng được chọn.</span>
+                    <div className="flex items-center space-x-2 text-sm">
+                        <span className="hidden sm:inline">Số hàng mỗi trang: {itemsPerPage}</span>
+                        <span>Trang {currentPage} trên {totalPages}</span>
+                        <div className="flex space-x-1">
+                            <button
+                                onClick={() => handlePageChange(1)}
+                                className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                disabled={currentPage === 1}
+                            >
+                                &lt;&lt;
+                            </button>
+                            <button
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                disabled={currentPage === 1}
+                            >
+                                &lt;
+                            </button>
+                            <button
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                disabled={currentPage === totalPages}
+                            >
+                                &gt;
+                            </button>
+                            <button
+                                onClick={() => handlePageChange(totalPages)}
+                                className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                disabled={currentPage === totalPages}
+                            >
+                                &gt;&gt;
+                            </button>
+                        </div>
                     </div>
                 </div>
 
