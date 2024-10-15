@@ -6,12 +6,66 @@ import { AiOutlineAppstore } from 'react-icons/ai';
 import { IoLibrary } from 'react-icons/io5';
 import { Link as ScrollLink } from 'react-scroll';
 import ThanhDoImage from '../assets/images/logo_thanh_do.png'
+import ThanhDoBackgroundImage from '../assets/images/DaiHocThanhDoHeader.png'
 import BooksImage from '../assets/images/books.png'
 import MagazineImage from '../assets/images/magazines.png'
 import OnlineDocumentImage from '../assets/images/onlineDocuments.png'
 import BorrowBooksImage from '../assets/images/borrowBooks.png'
 import SupportStudyImage from '../assets/images/supportStudy.png'
 import LibraryConsultationImage from '../assets/images/libraryConsultation.png'
+import ReactDOM from 'react-dom';
+
+function DialogMenu({ onClose }) {
+  return ReactDOM.createPortal(
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center relative">
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500">
+          ✕
+        </button>
+        <nav className="space-y-4 pt-7">
+          <ScrollLink
+            to="services"
+            smooth={true}
+            duration={500}
+            offset={-70}
+            className="flex items-center justify-start h-10 px-14 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
+          >
+            <AiOutlineAppstore size={20} className='mr-2' />
+            Dịch Vụ
+          </ScrollLink>
+          <ScrollLink
+            to="resources"
+            smooth={true}
+            duration={500}
+            offset={-70}
+            className="flex items-center justify-start h-10 px-14 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
+          >
+            <FaBook size={20} className='mr-2' />
+            Tài Nguyên
+          </ScrollLink>
+          <ScrollLink
+            to="contact"
+            smooth={true}
+            duration={500}
+            offset={-70}
+            className="flex items-center justify-start h-10 px-14 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
+          >
+            <FaEnvelope size={20} className='mr-2' />
+            Liên Hệ
+          </ScrollLink>
+          <Link
+            to="/library/login"
+            className="flex items-center justify-start h-10 px-14 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
+          >
+            <FaSignInAlt size={20} className='mr-2' />
+            Đăng Nhập
+          </Link>
+        </nav>
+      </div>
+    </div>,
+    document.body
+  );
+}
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,6 +84,7 @@ export default function HomePage() {
             alt="Thư viện Thành Đô Logo"
             className="w-32 md:w-40"
           />
+          {/* Nút toggle menu chỉ hiển thị trên mobile */}
           <button
             className="md:hidden absolute top-4 right-4 text-[#faa21a] focus:outline-none"
             onClick={toggleMenu}
@@ -37,73 +92,60 @@ export default function HomePage() {
           >
             {isMenuOpen ? '✕' : '☰'}
           </button>
-          <nav
-            className={`${isMenuOpen ? 'block' : 'hidden'} flex flex-row space-x-4 md:mt-0 mt-4`}
-          >
-            {/* Nút Dịch Vụ */}
-            <div className="relative group">
-              <ScrollLink
-                to="services"
-                smooth={true}
-                duration={500}
-                offset={-70}
-                className="flex items-center justify-center h-10 w-10 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
-              >
-                <AiOutlineAppstore size={20} />
-              </ScrollLink>
-              <span className="absolute top-14 left-1/2 transform -translate-x-1/2 bg-[#faa21a] text-white text-[10px] py-1 px-2 rounded shadow-lg opacity-0 group-hover:opacity-100 group-hover:translate-y-2 transition-all duration-300 whitespace-nowrap">
-                Dịch Vụ
-              </span>
-            </div>
 
-            {/* Nút Tài Nguyên */}
-            <div className="relative group">
-              <ScrollLink
-                to="resources"
-                smooth={true}
-                duration={500}
-                offset={-70}
-                className="flex items-center justify-center h-10 w-10 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
-              >
-                <FaBook size={20} />
-              </ScrollLink>
-              <span className="absolute top-14 left-1/2 transform -translate-x-1/2 bg-[#faa21a] text-white text-[10px] py-1 px-2 rounded shadow-lg opacity-0 group-hover:opacity-100 group-hover:translate-y-2 transition-all duration-300 whitespace-nowrap">
-                Tài Nguyên
-              </span>
-            </div>
-
-            {/* Nút Liên Hệ */}
-            <div className="relative group">
-              <ScrollLink
-                to="contact"
-                smooth={true}
-                duration={500}
-                offset={-70}
-                className="flex items-center justify-center h-10 w-10 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
-              >
-                <FaEnvelope size={20} />
-              </ScrollLink>
-              <span className="absolute top-14 left-1/2 transform -translate-x-1/2 bg-[#faa21a] text-white text-[10px] py-1 px-2 rounded shadow-lg opacity-0 group-hover:opacity-100 group-hover:translate-y-2 transition-all duration-300 whitespace-nowrap">
-                Liên Hệ
-              </span>
-            </div>
-
-            {/* Nút Đăng Nhập */}
-            <div className="relative group">
-              <Link
-                to="/library/login"
-                className="flex items-center justify-center h-10 w-10 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
-              >
-                <FaSignInAlt size={20} />
-              </Link>
-              <span className="absolute top-14 right-0 bg-[#faa21a] text-white text-[10px] py-1 px-2 rounded shadow-lg opacity-0 group-hover:opacity-100 group-hover:translate-y-2 transition-all duration-300 whitespace-nowrap">
-                Đăng Nhập
-              </span>
-            </div>
+          {/* Menu hiển thị mặc định trên desktop */}
+          <nav className="hidden md:flex space-x-4">
+            <ScrollLink
+              to="services"
+              smooth={true}
+              duration={500}
+              offset={-70}
+              className="flex items-center justify-center h-10 px-4 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
+            >
+              <AiOutlineAppstore size={20} className='mr-2' />
+              Dịch Vụ
+            </ScrollLink>
+            <ScrollLink
+              to="resources"
+              smooth={true}
+              duration={500}
+              offset={-70}
+              className="flex items-center justify-center h-10 px-4 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
+            >
+              <FaBook size={20} className='mr-2' />
+              Tài Nguyên
+            </ScrollLink>
+            <ScrollLink
+              to="contact"
+              smooth={true}
+              duration={500}
+              offset={-70}
+              className="flex items-center justify-center h-10 px-4 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
+            >
+              <FaEnvelope size={20} className='mr-2' />
+              Liên Hệ
+            </ScrollLink>
+            <Link
+              to="/library/login"
+              className="flex items-center justify-center h-10 px-4 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
+            >
+              <FaSignInAlt size={20} className='mr-2' />
+              Đăng Nhập
+            </Link>
           </nav>
-
         </div>
       </header>
+
+      {/* Hiển thị dialog menu nếu isMenuOpen là true */}
+      {isMenuOpen && <DialogMenu onClose={toggleMenu} />}
+
+      <div className="w-full h-[300px] md:h-[400px] lg:h-[650px] overflow-hidden">
+        <img
+          src={ThanhDoBackgroundImage}
+          alt="Trường Đại học Thành Đô"
+          className="w-full h-full object-cover object-bottom"
+        />
+      </div>
 
       {/* Hero Section */}
       <section className="bg-[#0b328f] text-white py-12 md:py-20">
