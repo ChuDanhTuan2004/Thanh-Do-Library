@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Search, Bell, User, LogOut, Menu } from 'lucide-react';
 
 export default function DashboardHeader({ currentUser, onLogout, onMenuClick }) {
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const userMenuRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -21,6 +22,26 @@ export default function DashboardHeader({ currentUser, onLogout, onMenuClick }) 
 
     const toggleUserMenu = () => {
         setIsUserMenuOpen(!isUserMenuOpen);
+    };
+
+    const handleLogout = async () => {
+        const token = localStorage.getItem('token');
+
+        const response = await fetch('http://localhost:8080/logout', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        if (response.ok) {
+            console.log('Đăng xuất thành công');
+            localStorage.removeItem('token');
+            navigate('/library/home');
+            onLogout();
+        } else {
+            console.error('Đăng xuất thất bại');
+        }
     };
 
     return (
@@ -62,7 +83,7 @@ export default function DashboardHeader({ currentUser, onLogout, onMenuClick }) 
                             <Link to="/dashboard/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</Link>
                             <Link to="/dashboard/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</Link>
                             <button
-                                onClick={onLogout}
+                                onClick={handleLogout}
                                 className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                             >
                                 <LogOut className="h-4 w-4 mr-2" />
