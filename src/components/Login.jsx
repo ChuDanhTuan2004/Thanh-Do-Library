@@ -1,18 +1,46 @@
 import React, { useState } from 'react';
 import { FaLock, FaUser } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import AxiosSupport from '../services/axiosSupport';
+
+const axiosInstance = new AxiosSupport();
 
 export default function Login() {
     const [studentId, setStudentId] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        // Handle login logic here
+        const response = await fetch(axiosInstance.getFullURL('login'), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: studentId,
+                password: password,
+            }),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+            localStorage.setItem('token', data.accessToken);
+            localStorage.setItem('role', data.roles[0].authority);
+
+            if (data.roles.some(role => role.authority === 'ROLE_ADMIN')) {
+                navigate('/dashboard/home');
+            } else {
+                navigate('/library/client');
+            }
+        } else {
+            console.error('Đăng nhập thất bại');
+        }
     };
 
     return (
-        <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+        <div className="bg-gray-100 min-h-screen flex items-center justify-center" >
             <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
                 <h2 className="text-3xl font-bold text-center mb-6 text-[#0b328f]">Đăng Nhập</h2>
                 <form onSubmit={handleLogin}>

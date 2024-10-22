@@ -14,58 +14,8 @@ import BorrowBooksImage from '../assets/images/borrowBooks.png'
 import SupportStudyImage from '../assets/images/supportStudy.png'
 import LibraryConsultationImage from '../assets/images/libraryConsultation.png'
 import ReactDOM from 'react-dom';
-
-function DialogMenu({ onClose }) {
-  return ReactDOM.createPortal(
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center relative">
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500">
-          ✕
-        </button>
-        <nav className="space-y-4 pt-7">
-          <ScrollLink
-            to="services"
-            smooth={true}
-            duration={500}
-            offset={-70}
-            className="flex items-center justify-start h-10 px-14 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
-          >
-            <AiOutlineAppstore size={20} className='mr-2' />
-            Dịch Vụ
-          </ScrollLink>
-          <ScrollLink
-            to="resources"
-            smooth={true}
-            duration={500}
-            offset={-70}
-            className="flex items-center justify-start h-10 px-14 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
-          >
-            <FaBook size={20} className='mr-2' />
-            Tài Nguyên
-          </ScrollLink>
-          <ScrollLink
-            to="contact"
-            smooth={true}
-            duration={500}
-            offset={-70}
-            className="flex items-center justify-start h-10 px-14 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
-          >
-            <FaEnvelope size={20} className='mr-2' />
-            Liên Hệ
-          </ScrollLink>
-          <Link
-            to="/library/login"
-            className="flex items-center justify-start h-10 px-14 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
-          >
-            <FaSignInAlt size={20} className='mr-2' />
-            Đăng Nhập
-          </Link>
-        </nav>
-      </div>
-    </div>,
-    document.body
-  );
-}
+import TDlogo from '../assets/images/TDLOGO.png'
+import { FaBookOpen, FaClock, FaCalendar, FaSearch, FaBars, FaChevronRight, FaUsers, FaBookmark, FaGraduationCap, FaGlobe } from 'react-icons/fa';
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -75,192 +25,268 @@ export default function HomePage() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="bg-white text-[#faa21a] py-2 sticky top-0 z-50 shadow-md">
-        <div className="container mx-auto flex flex-col justify-between md:flex-row items-center px-4 relative">
-          <img
-            src={ThanhDoImage}
-            alt="Thư viện Thành Đô Logo"
-            className="w-32 md:w-40"
-          />
-          {/* Nút toggle menu chỉ hiển thị trên mobile */}
-          <button
-            className="md:hidden absolute top-4 right-4 text-[#faa21a] focus:outline-none"
-            onClick={toggleMenu}
-            aria-label="Toggle Menu"
-          >
-            {isMenuOpen ? '✕' : '☰'}
-          </button>
-
-          {/* Menu hiển thị mặc định trên desktop */}
-          <nav className="hidden md:flex space-x-4">
-            <ScrollLink
-              to="services"
-              smooth={true}
-              duration={500}
-              offset={-70}
-              className="flex items-center justify-center h-10 px-4 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
-            >
-              <AiOutlineAppstore size={20} className='mr-2' />
-              Dịch Vụ
-            </ScrollLink>
-            <ScrollLink
-              to="resources"
-              smooth={true}
-              duration={500}
-              offset={-70}
-              className="flex items-center justify-center h-10 px-4 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
-            >
-              <FaBook size={20} className='mr-2' />
-              Tài Nguyên
-            </ScrollLink>
-            <ScrollLink
-              to="contact"
-              smooth={true}
-              duration={500}
-              offset={-70}
-              className="flex items-center justify-center h-10 px-4 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
-            >
-              <FaEnvelope size={20} className='mr-2' />
-              Liên Hệ
-            </ScrollLink>
-            <Link
-              to="/library/login"
-              className="flex items-center justify-center h-10 px-4 py-2 border-2 border-[#faa21a] rounded-full text-[#faa21a] hover:bg-[#faa21a] hover:text-white transition-colors"
-            >
-              <FaSignInAlt size={20} className='mr-2' />
-              Đăng Nhập
-            </Link>
-          </nav>
+    <div className="flex flex-col min-h-screen bg-gray-100">
+      <header className="bg-[#0b328f] text-white sticky top-0 z-50 shadow-md">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
+            <a href="/" className="flex items-center space-x-2">
+              {/* <div style={{ backgroundImage: `url(${TDlogo})` }} className="h-6 w-6 sm:h-8 sm:w-8" /> */}
+              <img src={TDlogo} alt="Logo" className="h-12 w-15 sm:h-12 sm:w-15 mr-2" />
+              <span className="text-lg sm:text-2xl">Thư viện Thành Đô</span>
+            </a>
+            <nav className="hidden md:block">
+              <ul className="flex space-x-4 lg:space-x-6">
+                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-sm lg:text-base">Trang chủ</a></li>
+                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-sm lg:text-base">Danh mục</a></li>
+                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-sm lg:text-base">Dịch vụ</a></li>
+                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-sm lg:text-base">Nghiên cứu</a></li>
+                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-sm lg:text-base">Giới thiệu</a></li>
+                <li>
+                  <Link to="/library/login" className="border-2 border-[#ffce46] bg-[#f2a429] hover:bg-[#ffce46] hover:text-white transition-colors text-sm lg:text-base rounded-full px-4 py-2">
+                    Đăng Nhập
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+            <button className="md:hidden bg-transparent border-none text-white">
+              <FaBars className="h-6 w-6" />
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Hiển thị dialog menu nếu isMenuOpen là true */}
-      {isMenuOpen && <DialogMenu onClose={toggleMenu} />}
-
-      <div className="w-full h-[300px] md:h-[400px] lg:h-[650px] overflow-hidden">
-        <img
-          src={ThanhDoBackgroundImage}
-          alt="Trường Đại học Thành Đô"
-          className="w-full h-full object-cover object-bottom"
-        />
-      </div>
-
-      {/* Hero Section */}
-      <section className="bg-[#0b328f] text-white py-12 md:py-20">
-        <div className="container mx-auto flex flex-col items-center text-center">
-          <IoLibrary size={50} className="text-[#faa21a] mb-4" />
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Thư viện Thành Đô</h2>
-          <p className="text-base md:text-lg mb-6">Khám phá kho tài nguyên phong phú và các dịch vụ hữu ích của Trường Đại học Thành Đô.</p>
-          <ScrollLink to="contact" smooth={true} duration={500} offset={-70} className="bg-[#faa21a] text-white px-4 py-2 md:px-6 md:py-3 rounded-full hover:bg-[#f8a020] text-base md:text-lg transition-transform transform hover:scale-105">
-            Liên Hệ Ngay
-          </ScrollLink>
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section id="services" className="py-12 md:py-20">
-        <div className="container mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-8">Dịch Vụ</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
-
-            <div className="bg-white p-6 rounded-lg shadow-lg transition-all transform hover:scale-105 duration-300">
-              <FaBook size={40} className="text-[#0b328f] mb-4 mx-auto" />
-              <h3 className="text-lg md:text-xl font-semibold mb-2">Mượn Sách</h3>
-              <p className="mb-3 text-sm md:text-base">Dịch vụ mượn sách tiện lợi cho sinh viên và giảng viên.</p>
-              <img
-                src={BorrowBooksImage}
-                alt="Mượn Sách"
-                className="mb-4 rounded-[5px] shadow-md w-full h-[150px] object-cover mx-auto"
-              />
+      <main className="flex-grow">
+        <div className="bg-cover bg-center py-16 sm:py-24 md:py-32" style={{ backgroundImage: `url(${ThanhDoBackgroundImage})` }}>
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-white shadow-text">Chào mừng đến với Thư viện Đại học Thành Đô</h1>
+            <p className="text-lg sm:text-xl mb-6 sm:mb-8 text-white shadow-text max-w-2xl mx-auto">Khám phá thế giới tri thức tại trái tim của Đại học Thành Đô. Thư viện chúng tôi là cửa ngõ dẫn đến kiến thức, sáng tạo và đổi mới.</p>
+            <div className="max-w-xl mx-auto flex flex-col sm:flex-row">
+              <input type="text" placeholder="Tìm kiếm sách, tạp chí, tài liệu..." className="w-full sm:flex-grow px-4 py-2 rounded-lg sm:rounded-r-none focus:outline-none focus:ring-2 focus:ring-[#0b328f] mb-2 sm:mb-0" />
+              <button type="submit" className="w-full sm:w-auto bg-[#f2a429] hover:bg-[#e09321] text-white px-6 py-2 rounded-lg sm:rounded-l-none transition-colors flex items-center justify-center">
+                <FaSearch className="h-4 w-4 inline-block mr-2" />
+                Tìm kiếm
+              </button>
             </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-lg transition-all transform hover:scale-105 duration-300">
-              <FaUniversity size={40} className="text-[#0b328f] mb-4 mx-auto" />
-              <h3 className="text-lg md:text-xl font-semibold mb-2">Hỗ Trợ Học Tập</h3>
-              <p className="mb-3 text-sm md:text-base">Các tài liệu và dịch vụ hỗ trợ học tập cho tất cả sinh viên.</p>
-              <img
-                src={SupportStudyImage}
-                alt="Hỗ Trợ Học Tập"
-                className="mb-4 rounded-[5px] shadow-md w-full h-[150px] object-cover mx-auto"
-              />
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-lg transition-all transform hover:scale-105 duration-300">
-              <FaInfoCircle size={40} className="text-[#0b328f] mb-4 mx-auto" />
-              <h3 className="text-lg md:text-xl font-semibold mb-2">Tư Vấn Thư Viện</h3>
-              <p className="mb-3 text-sm md:text-base">Nhận tư vấn từ đội ngũ chuyên gia để tìm kiếm tài liệu nhanh chóng.</p>
-              <img
-                src={LibraryConsultationImage}
-                alt="Tư Vấn Thư Viện"
-                className="mb-4 rounded-[5px] shadow-md w-full h-[150px] object-cover mx-auto"
-              />
-            </div>
-
           </div>
         </div>
-      </section>
 
-      {/* Resources Section */}
-      <section id="resources" className="bg-gray-200 py-12 md:py-20">
-        <div className="container mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-8">Tài Nguyên</h2>
-          <p className="text-base md:text-lg mb-6">Khám phá các tài nguyên phong phú mà thư viện cung cấp:</p>
-          <div className="flex flex-col md:flex-row justify-center space-y-8 md:space-y-0 md:space-x-8">
-
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg transition-all transform hover:scale-105 duration-300">
-              <h3 className="text-lg md:text-xl font-semibold mb-2">Sách</h3>
-              <p className="mb-4 text-sm md:text-base leading-relaxed">Các loại sách đa dạng từ các lĩnh vực khác nhau.</p>
-              <img
-                src={BooksImage}
-                alt="Sách"
-                className="mb-4 rounded-[5px] shadow-md w-full h-[200px] object-cover mx-auto"
-              />
-              <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors">
-                Tìm Hiểu Thêm
-              </button>
+        <div className="py-12 sm:py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-[#0b328f]">Khám phá Bộ sưu tập của chúng tôi</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+              {[
+                { title: "Sách điện tử", desc: "Truy cập hàng nghìn sách điện tử" },
+                { title: "Tạp chí học thuật", desc: "Truy cập các tạp chí hàng đầu" },
+                { title: "Cơ sở dữ liệu", desc: "Truy cập các CSDL nghiên cứu" },
+                { title: "Tài liệu đa phương tiện", desc: "Khám phá âm thanh và video" }
+              ].map((item, index) => (
+                <div key={index} className="bg-gray-50 rounded-lg p-4 sm:p-6 shadow-md hover:shadow-lg transition-shadow" >
+                  <h3 className="text-lg sm:text-xl font-bold mb-2 text-[#0b328f]">{item.title}</h3>
+                  <p className="text-gray-600 mb-4 text-sm sm:text-base">{item.desc}</p>
+                  <div style={{ backgroundImage: `url(${ThanhDoBackgroundImage})` }} alt={item.title} className="w-full h-32 sm:h-40 object-cover rounded-md mb-4" />
+                  <button className="w-full bg-[#0b328f] text-white py-2 rounded hover:bg-[#092569] transition-colors text-sm sm:text-base">
+                    Khám phá
+                  </button>
+                </div>
+              ))}
             </div>
-
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg transition-all transform hover:scale-105 duration-300">
-              <h3 className="text-lg md:text-xl font-semibold mb-2">Tạp Chí</h3>
-              <p className="mb-4 text-sm md:text-base leading-relaxed">Hơn 100 tạp chí chuyên ngành cập nhật mới nhất.</p>
-              <img
-                src={MagazineImage}
-                alt="Tạp Chí"
-                className="mb-4 rounded-[5px] shadow-md w-full h-[200px] object-cover mx-auto"
-              />
-              <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors">
-                Tìm Hiểu Thêm
-              </button>
-            </div>
-
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg transition-all transform hover:scale-105 duration-300">
-              <h3 className="text-lg md:text-xl font-semibold mb-2">Tài Liệu Điện Tử</h3>
-              <p className="mb-4 text-sm md:text-base leading-relaxed">Các tài liệu điện tử dễ dàng truy cập trực tuyến.</p>
-              <img
-                src={OnlineDocumentImage}
-                alt="Tài Liệu Điện Tử"
-                className="mb-4 rounded-[5px] shadow-md w-full h-[200px] object-cover mx-auto"
-              />
-              <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors">
-                Tìm Hiểu Thêm
-              </button>
-            </div>
-
           </div>
         </div>
-      </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-12 md:py-20">
+        <div className="py-12 sm:py-16 bg-gray-100">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-[#0b328f]">Dịch vụ Thư viện</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+              {[
+                {
+                  title: "Mượn và Trả sách",
+                  desc: "Quản lý tài khoản thư viện của bạn",
+                  items: ["Mượn sách trực tuyến", "Gia hạn sách", "Kiểm tra hạn trả", "Đặt trước sách"]
+                },
+                {
+                  title: "Hỗ trợ Nghiên cứu",
+                  desc: "Nhận hỗ trợ từ các chuyên gia",
+                  items: ["Tư vấn nghiên cứu", "Hướng dẫn tìm kiếm tài liệu", "Hỗ trợ trích dẫn", "Hội thảo kỹ năng nghiên cứu"]
+                },
+                {
+                  title: "Không gian Học tập",
+                  desc: "Đặt phòng và không gian học tập",
+                  items: ["Phòng học nhóm", "Khu vực học tập yên tĩnh", "Phòng máy tính", "Không gian sáng tạo"]
+                }
+              ].map((service, index) => (
+                <div key={index} className="bg-white rounded-lg p-4 sm:p-6 shadow-md hover:shadow-lg transition-shadow">
+                  <h3 className="text-lg sm:text-xl font-bold mb-2 text-[#0b328f]">{service.title}</h3>
+                  <p className="text-gray-600 mb-4 text-sm sm:text-base">{service.desc}</p>
+                  <ul className="list-disc list-inside space-y-1 sm:space-y-2 text-gray-700 text-sm sm:text-base">
+                    {service.items.map((item, itemIndex) => (
+                      <li key={itemIndex}>{item}</li>
+                    ))}
+                  </ul>
+                  <button className="mt-4 w-full bg-[#f2a429] text-white py-2 rounded hover:bg-[#e09321] transition-colors text-sm sm:text-base">
+                    Tìm hiểu thêm
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="py-12 sm:py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-[#0b328f]">Tin tức và Sự kiện</h2>
+            <div className="max-w-3xl mx-auto">
+              <div className="mb-4 flex">
+                <button className="flex-1 bg-[#0b328f] text-white px-4 py-2 rounded-l hover:bg-[#092569] transition-colors text-sm sm:text-base">Tin tức</button>
+                <button className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-r hover:bg-gray-300 transition-colors text-sm sm:text-base">Sự kiện</button>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4 sm:p-6 mb-4 shadow-md">
+                <h3 className="text-lg sm:text-xl font-bold mb-2 text-[#0b328f]">Mở cửa kéo dài trong tuần thi</h3>
+                <p className="text-gray-600 mb-2 text-sm sm:text-base">
+                  <FaClock className="inline-block mr-2 text-[#f2a429]" />
+                  Đăng ngày 1 tháng 5, 2024
+                </p>
+                <p className="text-gray-700 text-sm sm:text-base">Thư viện sẽ mở cửa 24/7 trong tuần thi để hỗ trợ nhu cầu học tập của sinh viên. Chúng tôi cung cấp không gian học tập yên tĩnh, dịch vụ hỗ trợ nghiên cứu, và các tiện ích cần thiết để giúp bạn đạt được kết quả tốt nhất trong kỳ thi.</p>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4 sm:p-6 shadow-md">
+                <h3 className="text-lg sm:text-xl font-bold mb-2 text-[#0b328f]">Bộ sưu tập mới: Văn học Đương đại Trung Quốc</h3>
+                <p className="text-gray-600 mb-2 text-sm sm:text-base">
+                  <FaClock className="inline-block mr-2 text-[#f2a429]" />
+                  Đăng ngày 15 tháng 4, 2024
+                </p>
+                <p className="text-gray-700 text-sm sm:text-base">Thư viện vừa bổ sung một bộ sưu tập đặc biệt về Văn học Đương đại Trung Quốc. Bộ sưu tập bao gồm hơn 1000 tác phẩm từ các tác giả nổi tiếng và mới nổi, phản ánh sự phong phú và đa dạng của văn học Trung Quốc hiện đại.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="py-12 sm:py-16 bg-gray-100">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-[#0b328f]">Hướng dẫn Nghiên cứu</h2>
+            <div className="max-w-3xl mx-auto">
+              {[
+                {
+                  title: "Cách tìm kiếm tài liệu hiệu quả",
+                  content: (
+                    <>
+                      <p className="text-sm sm:text-base">Để tìm kiếm tài liệu hiệu quả, hãy làm theo các bước sau:</p>
+                      <ol className="list-decimal list-inside mt-2 space-y-1 sm:space-y-2 text-sm sm:text-base">
+                        <li>Xác định từ khóa chính cho chủ đề của bạn</li>
+                        <li>Sử dụng các toán tử Boolean (AND, OR, NOT) để tinh chỉnh tìm kiếm</li>
+                        <li>Tận dụng các bộ lọc như năm xuất bản, loại tài liệu, ngôn  ngữ</li>
+                        <li>Kiểm tra danh sách tham khảo của các bài báo liên quan</li>
+                        <li>Sử dụng các cơ sở dữ liệu chuyên ngành cho lĩnh vực của bạn</li>
+                      </ol>
+                    </>
+                  )
+                },
+                {
+                  title: "Cách trích dẫn nguồn tài liệu",
+                  content: (
+                    <>
+                      <p className="text-sm sm:text-base">Trích dẫn đúng cách là rất quan trọng trong nghiên cứu học thuật. Dưới đây là một số hướng dẫn cơ bản:</p>
+                      <ul className="list-disc list-inside mt-2 space-y-1 sm:space-y-2 text-sm sm:text-base">
+                        <li>Luôn ghi nhận nguồn gốc của thông tin và ý tưởng</li>
+                        <li>Sử dụng phong cách trích dẫn phù hợp với lĩnh vực của bạn (ví dụ: APA, MLA, Chicago)</li>
+                        <li>Đảm bảo thông tin trích dẫn đầy đủ và chính xác</li>
+                        <li>Sử dụng công cụ quản lý trích dẫn để tổ chức và tạo trích dẫn tự động</li>
+                      </ul>
+                      <p className="mt-2 text-sm sm:text-base">Thư viện cung cấp hướng dẫn chi tiết và hội thảo về cách trích dẫn. Hãy liên hệ với chúng tôi để biết thêm thông tin.</p>
+                    </>
+                  )
+                },
+                {
+                  title: "Sử dụng cơ sở dữ liệu chuyên ngành",
+                  content: (
+                    <>
+                      <p className="text-sm sm:text-base">Cơ sở dữ liệu chuyên ngành cung cấp truy cập vào các tài liệu học thuật chất lượng cao. Dưới đây là một số mẹo để sử dụng hiệu quả:</p>
+                      <ul className="list-disc list-inside mt-2 space-y-1 sm:space-y-2 text-sm sm:text-base">
+                        <li>Xác định cơ sở dữ liệu phù hợp nhất cho lĩnh vực của bạn</li>
+                        <li>Tìm hiểu về các tính năng tìm kiếm nâng cao của từng cơ sở dữ liệu</li>
+                        <li>Sử dụng bộ lọc để thu hẹp kết quả tìm kiếm</li>
+                        <li>Lưu các tìm kiếm và thiết lập thông báo cho các bài báo mới</li>
+                        <li>Tận dụng tính năng xuất trích dẫn của cơ sở dữ liệu</li>
+                      </ul>
+                      <p className="mt-2 text-sm sm:text-base">Thư viện cung cấp hướng dẫn sử dụng cho từng cơ sở dữ liệu. Đừng ngần ngại liên hệ với chúng tôi để được hỗ trợ.</p>
+                    </>
+                  )
+                }
+              ].map((item, index) => (
+                <div key={index} className="mb-4">
+                  <button className="flex justify-between items-center w-full bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                    <span className="text-base sm:text-lg font-semibold text-[#0b328f]">{item.title}</span>
+                    <FaChevronRight className="h-5 w-5 text-[#f2a429]" />
+                  </button>
+                  <div className="bg-white mt-2 p-4 rounded-lg shadow-md">
+                    {item.content}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="py-12 sm:py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-[#0b328f]">Đội ngũ Thư viện</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+              {[
+                { name: "Nguyễn Văn A", role: "Giám đốc Thư viện", desc: "Chuyên gia về quản lý thư viện số và phát triển bộ sưu tập" },
+                { name: "Trần Thị B", role: "Trưởng phòng Dịch vụ Độc giả", desc: "Chuyên gia về dịch vụ tham khảo và hỗ trợ nghiên cứu" },
+                { name: "Lê Văn C", role: "Quản lý Công nghệ Thông tin", desc: "Chuyên gia về hệ thống thư viện số và cơ sở dữ liệu" },
+                { name: "Phạm Thị D", role: "Chuyên viên Đào tạo", desc: "Chuyên gia về đào tạo kỹ năng thông tin và hướng dẫn sử dụng thư viện" }
+              ].map((member, index) => (
+                <div key={index} className="bg-gray-50 rounded-lg p-4 sm:p-6 text-center shadow-md hover:shadow-lg transition-shadow">
+                  <div style={{ backgroundImage: `url(${ThanhDoBackgroundImage})` }} alt={member.name} className="w-20 h-20 sm:w-24 sm:h-24 rounded-full mx-auto mb-4" />
+                  <h3 className="text-lg sm:text-xl font-bold text-[#0b328f]">{member.name}</h3>
+                  <p className="text-[#f2a429] mb-2 text-sm sm:text-base">{member.role}</p>
+                  <p className="text-gray-600 text-sm">{member.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="py-12 sm:py-16 bg-gray-100">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-[#0b328f]">Thống kê Thư viện</h2>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
+              {[
+                { icon: FaBookOpen, number: "1,000,000+", desc: "Sách in và điện tử" },
+                { icon: FaBookmark, number: "50,000+", desc: "Tạp chí và ấn phẩm định kỳ" },
+                { icon: FaUsers, number: "30,000+", desc: "Độc giả đăng ký" },
+                { icon: FaGraduationCap, number: "500+", desc: "Hội thảo và đào tạo mỗi năm" }
+              ].map((stat, index) => (
+                <div key={index} className="bg-white rounded-lg p-4 sm:p-6 text-center shadow-md hover:shadow-lg transition-shadow">
+                  <stat.icon className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-2 text-[#f2a429]" />
+                  <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2 text-[#0b328f]">{stat.number}</h3>
+                  <p className="text-gray-600 text-sm sm:text-base">{stat.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="py-12 sm:py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-[#0b328f]">Đối tác của Chúng tôi</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-8" >
+              {[...Array(6)].map((_, index) => (
+                <img key={index} src={ThanhDoImage} alt={`Đối tác ${index + 1}`} className="mx-auto filter grayscale hover:filter-none transition-all duration-300" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Contact div */}
+      <div id="contact" className="py-12 md:py-20">
         <div className="container mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-8">Thông tin liên hệ</h2>
           <a href="mailto:library@university.edu" className="bg-[#0b328f] text-white px-4 py-2 md:px-6 md:py-3 rounded-full hover:bg-[#08367b] text-base md:text-lg transition-transform transform hover:scale-105">
             <FaEnvelope size={20} className="inline mr-2" /> Gửi Email
           </a>
         </div>
-      </section>
+      </div>
 
       {/* Footer */}
       <footer className="bg-[#0b328f] text-white py-6">

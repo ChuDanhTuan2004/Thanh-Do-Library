@@ -2,9 +2,9 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import DashboardLayout from './DashboardLayout';
 import Document from './Document';
-import Category from './Category';
 import UserManagement from './UserManagement';
 import DashboardHome from './DashboardHome'
+import CategoryManagement from './CategoryManagement';
 
 export default function Dashboard() {
     const currentUser = {
@@ -23,7 +23,7 @@ export default function Dashboard() {
                 <Route index element={<Navigate to="home" replace />} />
                 <Route path="home" element={<DashboardHome />} />
                 <Route path="documents" element={<Document />} />
-                <Route path="categories" element={<Category />} />
+                <Route path="categories" element={<CategoryManagement />} />
                 <Route path="users" element={<UserManagement />} />
             </Route>
         </Routes>
