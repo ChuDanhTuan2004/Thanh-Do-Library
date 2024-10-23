@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { FiPlus, FiEdit, FiTrash, FiSearch } from 'react-icons/fi';
-import Modal from './Modal';
-import DocumentForm from './DocumentForm';
+import React, { useEffect, useState } from 'react';
+import { FiEdit, FiPlus, FiSearch, FiTrash } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AxiosSupport from '../services/axiosSupport'; // Import AxiosSupport
+import AxiosSupport from '../../../services/axiosSupport'; // Import AxiosSupport
+import Modal from '../../Modal';
+import DocumentForm from './DocumentForm';
 
 const axios = new AxiosSupport(); // Khởi tạo AxiosSupport
 
@@ -19,9 +19,22 @@ export default function Document() {
     const [itemsPerPage] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
 
+    const [category,setCategory] = useState('');
+
     useEffect(() => {
         fetchDocuments();
-    }, []);
+        fetchCategories();
+    }, [currentPage]); // Thêm currentPage vào dependency array
+
+    const fetchCategories = async () => {
+        try {
+            const data = await axios.fetchWithAuth('getAllCategories');
+            setCategory(data);
+        } catch (error) {
+            console.error('Lỗi khi lấy danh mục:', error);
+            toast.error('Đã xảy ra lỗi khi tải danh sách danh mục.');
+        }
+    };
 
     const fetchDocuments = async () => {
         try {
@@ -35,10 +48,14 @@ export default function Document() {
 
     const handleAddDocument = async (imageFile) => {
         try {
-            const response = await axios.createBook(newDocument); // Tạo sách mới
+            let image = null; 
             if (imageFile) {
-                await uploadImage(imageFile, response.bookId); // Gọi API để tải lên hình ảnh
+                image = await uploadImage(imageFile); // Gọi API để tải lên hình ảnh
             }
+            if (image) {
+                newDocument.url = image; // Cập nhật URL hình ảnh cho sách mới}
+            }
+            const response = await axios.createBook(newDocument);
             fetchDocuments(); // Tải lại danh sách sách
             resetForm();
             toast.success('Sách đã được thêm thành công!');
@@ -50,18 +67,19 @@ export default function Document() {
     const handleSaveEdit = async (imageFile) => {
         try {
             // Cập nhật thông tin sách
-            await axios.updateBook(editingDocument.bookId, newDocument); // Cập nhật sách
 
             // Nếu có tệp hình ảnh, gửi yêu cầu tải lên
+            let image = null;
             if (imageFile) {
                 const formData = new FormData();
-                formData.append('file', imageFile); // Thêm tệp hình ảnh
-                formData.append('bookId', editingDocument.bookId);
-            // Thêm ID của sách
+                formData.append('file', imageFile); // Thêm tệp hình ảnh// Thêm ID của sách
 
-                await axios.uploadImage(formData); // Gọi API để tải lên hình ảnh
+                image = await axios.uploadImage(formData); // Gọi API để tải lên hình ảnh
             }
-
+            if(image) {
+                newDocument.url = image; // Cập nhật URL hình ảnh cho sách mới
+            }
+            await axios.updateBook(editingDocument.bookId, newDocument); // Cập nhật sách
             fetchDocuments(); // Tải lại danh sách sách
             resetForm();
             toast.success('Sách đã được chỉnh sửa thành công!');
@@ -102,12 +120,11 @@ export default function Document() {
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= totalPages) {
             setCurrentPage(newPage);
-            fetchDocuments();
         }
     };
 
     return (
-        <div className="p-6 bg-gray-50 min-h-screen rounded-md">
+        <div className="p-6 bg-gradient-to-br from-blue-50 to-orange-50 rounded-md">
             <div className="flex-1 lg:p-6 space-y-4 lg:space-y-6 overflow-x-auto">
                 <h1 className="text-2xl font-semibold text-gray-900 mb-2">Quản lý sách</h1>
 
@@ -211,6 +228,7 @@ export default function Document() {
                         onSubmit={isEditing ? handleSaveEdit : handleAddDocument}
                         onCancel={resetForm}
                         isEditing={isEditing}
+                        category={category}
                     />
                 </Modal>
 

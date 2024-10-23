@@ -1,11 +1,11 @@
 import './App.css';
 import { Routes, Route, Navigate } from 'react-router-dom'
-import Dashboard from './components/Dashboard';
 import HomePage from './components/HomePage';
 import Login from './components/Login';
 import ClientPage from './components/clientPage/ClientPage';
 import Register from './components/Register';
 import ProtectedRoute from './services/ProtectedRoute';
+import Dashboard from './components/adminPage/Dashboard';
 
 function App() {
   return (
@@ -28,7 +28,7 @@ function App() {
         path='/dashboard/*'
         element={
           <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
-            <Dashboard />
+            <Dashboard/>
           </ProtectedRoute>
         }
       />
