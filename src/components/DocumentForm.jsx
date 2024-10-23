@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Thay đổi từ useHistory sang useNavigate
-import { toast } from 'react-toastify'; // Thêm toastify để hiển thị thông báo
+import { toast } from 'react-toastify';
+import AxiosSupport from '../services/axiosSupport'; // Import AxiosSupport
 
-export default function DocumentForm({ document, onChange, onSubmit, onCancel, isEditing }) {
+const axios = new AxiosSupport(); // Khởi tạo AxiosSupport
+export default function DocumentForm({ document, onChange, onSubmit, onCancel, isEditing, category }) {
     const [imageFile, setImageFile] = useState(null); // Trạng thái để lưu trữ hình ảnh
     const navigate = useNavigate(); // Khởi tạo useNavigate
 
-    useEffect(() => {
+    useEffect(async () => {
         const token = localStorage.getItem('token');
         if (!token) {
             // Nếu không có token, chuyển hướng đến trang đăng nhập
@@ -15,7 +17,8 @@ export default function DocumentForm({ document, onChange, onSubmit, onCancel, i
     }, [navigate]);
 
     const handleImageChange = (e) => {
-        setImageFile(e.target.files[0]); // Lưu trữ tệp hình ảnh
+        setImageFile(e.target.files[0]);
+        // Lưu trữ tệp hình ảnh
     };
 
     const handleSubmit = async (e) => {
@@ -75,6 +78,26 @@ export default function DocumentForm({ document, onChange, onSubmit, onCancel, i
                                 className="w-full border border-gray-300 rounded p-2"
                                 required
                             />
+                        </div>
+                        <div>
+                            <label htmlFor="categoryId" className="block text-gray-700">Loại sách:</label>
+                            <select
+                                id="categoryId"
+                                name="categoryId"
+                                value={document.category}
+                                onChange={onChange}
+                                className="w-full border border-gray-300 rounded p-2"
+                                required
+                            >
+                                <option value="">Chọn loại sách</option>
+                                {category.map((category) => (
+                                    <option key={category.categoryId} value={
+                                         category.categoryId
+                                    }>
+                                        {category.name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         <div>
                             <label htmlFor="publisher" className="block text-gray-700">Nhà xuất bản:</label>
