@@ -18,11 +18,7 @@ export default function Document() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
-
-    useEffect(() => {
-        fetchDocuments();
-    }, []);
-
+    const [category,setCategory] = useState('');
     const fetchDocuments = async () => {
         try {
             const response = await axios.getAllBooks({ page: currentPage - 1, size: itemsPerPage });
@@ -32,36 +28,58 @@ export default function Document() {
             toast.error('Không thể tải danh sách sách!');
         }
     };
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const data = await axios.fetchWithAuth('getAllCategories');
+                setCategory(data);
+            } catch (error) {
+                console.error('Lỗi khi lấy danh mục:', error);
+                toast.error('Đã xảy ra lỗi khi tải danh sách danh mục.');
+            }
+        };
+        fetchDocuments().then(() => {fetchCategories();})
+    }, []);
+
+
 
     const handleAddDocument = async (imageFile) => {
         try {
-            const response = await axios.createBook(newDocument); // Tạo sách mới
+            let image = null;  // Tạo sách mới
             if (imageFile) {
-                await uploadImage(imageFile, response.bookId); // Gọi API để tải lên hình ảnh
+                image = await uploadImage(imageFile); // Gọi API để tải lên hình ảnh
             }
+            if (image) {
+                newDocument.url = image; // Cập nhật URL hình ảnh cho sách mới}
+            }
+            const response = await axios.createBook(newDocument);
             fetchDocuments(); // Tải lại danh sách sách
             resetForm();
             toast.success('Sách đã được thêm thành công!');
-        } catch (error) {
-            toast.error('Không thể thêm sách!');
         }
-    };
+        catch
+            (error)
+            {
+                toast.error('Không thể thêm sách!');
+            }
+        }
 
     const handleSaveEdit = async (imageFile) => {
         try {
             // Cập nhật thông tin sách
-            await axios.updateBook(editingDocument.bookId, newDocument); // Cập nhật sách
 
             // Nếu có tệp hình ảnh, gửi yêu cầu tải lên
+            let image = null;
             if (imageFile) {
                 const formData = new FormData();
-                formData.append('file', imageFile); // Thêm tệp hình ảnh
-                formData.append('bookId', editingDocument.bookId);
-            // Thêm ID của sách
+                formData.append('file', imageFile); // Thêm tệp hình ảnh// Thêm ID của sách
 
-                await axios.uploadImage(formData); // Gọi API để tải lên hình ảnh
+                image = await axios.uploadImage(formData); // Gọi API để tải lên hình ảnh
             }
-
+            if(image) {
+                newDocument.url = image; // Cập nhật URL hình ảnh cho sách mới
+            }
+            await axios.updateBook(editingDocument.bookId, newDocument); // Cập nhật sách
             fetchDocuments(); // Tải lại danh sách sách
             resetForm();
             toast.success('Sách đã được chỉnh sửa thành công!');
@@ -77,7 +95,7 @@ export default function Document() {
             formData.append('file', imageFile); // Thêm tệp hình ảnh
             formData.append('bookId', bookId); // Thêm ID của sách
 
-            await axios.uploadImage(formData); // Gọi API để tải lên hình ảnh
+            return await axios.uploadImage(formData); // Gọi API để tải lên hình ảnh
         } catch (error) {
             toast.error('Không thể tải lên hình ảnh!');
         }
@@ -211,6 +229,7 @@ export default function Document() {
                         onSubmit={isEditing ? handleSaveEdit : handleAddDocument}
                         onCancel={resetForm}
                         isEditing={isEditing}
+                        category={category}
                     />
                 </Modal>
 
