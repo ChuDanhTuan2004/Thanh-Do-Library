@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Outlet } from 'react-router-dom';
+import AxiosSupport from '../../services/axiosSupport';
 import ClientSidebar from './ClientSidebar';
 import ClientHeader from './ClientHeader';
 import BookSection from './BookSection';
@@ -17,13 +18,38 @@ const FeaturedCategory = ({ title, description, imageUrl }) => (
   </div>
 );
 
+const axiosSupport = new AxiosSupport();
+
 export default function ClientPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [books, setBooks] = useState([]);
   const navigate = useNavigate();
-
+  
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
+  const fetchBooks = async () => {
+    try {
+      const response = await axiosSupport.getAllBooks();
+      if (response && response.content) {
+        setBooks(response.content.map(book => ({
+          id: book.bookId,
+          title: book.title,
+          author: book.author,
+          imageUrl: book.imageUrl || demoBookCover,
+          url: book.url,
+          canReadNow: true
+        })));
+      }
+    } catch (error) {
+      console.error('Lỗi khi lấy danh sách sách:', error);
+    }
   };
 
   const handleLogout = async () => {
@@ -45,17 +71,12 @@ export default function ClientPage() {
     }
   };
 
-  const generateSampleBooks = (count) => {
-    return Array.from({ length: count }, (_, i) => ({
-      id: i + 1,
-      title: `Sách mẫu ${i + 1}`,
-      author: `Tác giả ${String.fromCharCode(65 + i)}`,
-      imageUrl: demoBookCover,
-      canReadNow: Math.random() > 0.5
+  const getBooks = (count) => {
+    return books.slice(0, count).map(book => ({
+      ...book,
+      onClick: () => handleBookClick(book.id)
     }));
   };
-
-  const sampleBooks = generateSampleBooks(20);
 
   const carouselItems = [
     { imageUrl: demoBookCover, title: "Sách nổi bật 1", description: "Mô tả ngắn về sách 1" },
@@ -70,6 +91,10 @@ export default function ClientPage() {
     { title: "Tâm lý học", description: "Khám phá tâm trí con người", imageUrl: demoBookCover },
   ];
 
+  const handleBookClick = (bookId) => {
+    navigate(`/book/${bookId}`);
+  };
+
   return (
     <div className="flex h-screen bg-gradient-to-br from-blue-400 to-orange-400">
       <ClientSidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
@@ -80,6 +105,10 @@ export default function ClientPage() {
           onMenuClick={toggleSidebar}
         />
         <main className="flex-1 overflow-x-hidden overflow-y-auto pt-16">
+          {/* Sử dụng Outlet để hiển thị nội dung của các route con */}
+          <Outlet />
+          
+          {/* Nội dung mặc định của ClientPage */}
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <Carousel items={carouselItems} />
             <div className="my-8 bg-white bg-opacity-80 rounded-lg p-6">
@@ -92,13 +121,13 @@ export default function ClientPage() {
             </div>
             <div className="space-y-8">
               <div className="bg-white bg-opacity-80 rounded-lg p-6">
-                <BookSection title="Đọc ngay" books={sampleBooks.slice(0, 10)} />
+                <BookSection title="Đọc ngay" books={getBooks(10)} />
               </div>
               <div className="bg-white bg-opacity-80 rounded-lg p-6">
-                <BookSection title="Dành cho bạn" books={sampleBooks.slice(5, 15)} />
+                <BookSection title="Dành cho bạn" books={getBooks(10)} />
               </div>
               <div className="bg-white bg-opacity-80 rounded-lg p-6">
-                <BookSection title="Sách mới" books={sampleBooks.slice(10)} />
+                <BookSection title="Sách mới" books={getBooks(10)} />
               </div>
             </div>
           </div>

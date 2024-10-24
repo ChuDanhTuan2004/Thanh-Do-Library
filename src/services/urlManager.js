@@ -17,6 +17,7 @@ const urlManager = {
     updateBook: (id) => `/books/${id}`, // Cập nhật sách với ID
     deleteBook: (id) => `/books/${id}`, // Xóa sách với ID
     uploadImage: '/books/upload', // Endpoint để tải lên hình ảnh
+    getBookById: (id) => `/books/${id}`,
 };
 
 export default urlManager;

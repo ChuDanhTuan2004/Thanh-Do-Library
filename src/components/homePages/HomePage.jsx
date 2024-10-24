@@ -1,21 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { FaBars, FaBookmark, FaBookOpen, FaChevronRight, FaClock, FaEnvelope, FaFacebookF, FaGoogle, FaGraduationCap, FaSearch, FaUsers, FaYoutube } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { FaBook, FaUniversity, FaInfoCircle, FaEnvelope, FaSignInAlt } from 'react-icons/fa';
-import { FaFacebookF, FaYoutube, FaGoogle } from 'react-icons/fa';
-import { AiOutlineAppstore } from 'react-icons/ai';
-import { IoLibrary } from 'react-icons/io5';
-import { Link as ScrollLink } from 'react-scroll';
-import ThanhDoImage from '../assets/images/logo_thanh_do.png'
-import ThanhDoBackgroundImage from '../assets/images/DaiHocThanhDoHeader.png'
-import BooksImage from '../assets/images/books.png'
-import MagazineImage from '../assets/images/magazines.png'
-import OnlineDocumentImage from '../assets/images/onlineDocuments.png'
-import BorrowBooksImage from '../assets/images/borrowBooks.png'
-import SupportStudyImage from '../assets/images/supportStudy.png'
-import LibraryConsultationImage from '../assets/images/libraryConsultation.png'
-import ReactDOM from 'react-dom';
-import TDlogo from '../assets/images/TDLOGO.png'
-import { FaBookOpen, FaClock, FaCalendar, FaSearch, FaBars, FaChevronRight, FaUsers, FaBookmark, FaGraduationCap, FaGlobe } from 'react-icons/fa';
+import TDlogo from '../../assets/images/TDLOGO.png';
+import ThanhDoBackgroundImage from '../../assets/images/DaiHocThanhDoHeader.png';
+import ThanhDoImage from '../../assets/images/logo_thanh_do.png';
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,10 +31,9 @@ export default function HomePage() {
             </a>
             <nav className="hidden md:block">
               <ul className="flex space-x-2 lg:space-x-6">
-                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-xs lg:text-base">Danh mục</a></li>
-                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-xs lg:text-base">Dịch vụ</a></li>
-                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-xs lg:text-base">Nghiên cứu</a></li>
-                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-xs lg:text-base">Giới thiệu</a></li>
+                <li><Link to="/library/introduction" className="hover:text-[#f2a429] transition-colors text-xs lg:text-base">Giới thiệu</Link></li>
+                <li><Link to="/library/research" className="hover:text-[#f2a429] transition-colors text-xs lg:text-base">Nghiên cứu</Link></li>
+                <li><Link to="/library/categories" className="hover:text-[#f2a429] transition-colors text-xs lg:text-base">Danh mục</Link></li>
                 <li>
                   <Link to="/library/login" className="border-2 border-[#ffce46] bg-[#f2a429] hover:bg-[#ffce46] hover:text-white transition-colors text-xs lg:text-base rounded-full px-2 py-1 lg:px-4 lg:py-2">
                     Đăng Nhập
@@ -335,7 +322,7 @@ export default function HomePage() {
 
             {/* Thông tin liên hệ */}
             <div className="space-y-2">
-              <p className="font-semibold text-lg">Bản quyền thuộc về Thư viện Trường Đại học Thành Đô</p>
+              <p className="font-semibold text-lg">Bản quy��n thuộc về Thư viện Trường Đại học Thành Đô</p>
               <p>Địa chỉ: Kim Chung, Hoài Đức, Hà Nội, Việt Nam</p>
               <p>Email: lib@thanhdo.edu.vn</p>
               <p>Điện thoại: (84-24)33861016</p>

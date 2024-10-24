@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaLock, FaUser } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import AxiosSupport from '../services/axiosSupport';
+import { FaBackward } from 'react-icons/fa';
 
 const axiosInstance = new AxiosSupport();
 
@@ -40,7 +41,17 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-[#f2a429] to-[#0b328f]" >
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-[#0b328f] to-[#f2a429]" >
+            <div className="container mx-auto px-4 py-2 fixed top-0 left-0 z-50">
+                <div className="flex justify-start items-center">
+                    <Link
+                        to="/library/home"
+                        className="bg-orange-400 hover:bg-orange-500 text-white rounded-full p-2 border-2 border-yellow-300 transition duration-300 ease-in-out"
+                    >
+                        <FaBackward className="text-xl" />
+                    </Link>
+                </div>
+            </div>
             <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
                 <h2 className="text-3xl font-bold text-center mb-6 text-[#0b328f]">Đăng Nhập</h2>
                 <form onSubmit={handleLogin}>

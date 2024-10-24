@@ -25,19 +25,19 @@ export default function ClientHeader({ currentUser, onLogout, onMenuClick }) {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-[#0b328f] text-white px-4 py-3 flex items-center justify-between z-30">
+    <header className="fixed top-0 left-0 right-0 bg-[#0b328f] text-white px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between z-30">
       <div className="flex items-center">
-        <button onClick={onMenuClick} className="mr-4 text-white hover:text-[#f2a429]">
-          <FiMenu className="h-6 w-6" />
+        <button onClick={onMenuClick} className="mr-2 sm:mr-4 text-white hover:text-[#f2a429]">
+          <FiMenu className="h-5 w-5 sm:h-6 sm:w-6" />
         </button>
-        <Link to="/client/home" className="text-xl font-semibold text-white mr-8">Thư viện Thành Đô</Link>
+        <Link to="/library/client" className="text-lg sm:text-xl font-semibold text-white mr-4 sm:mr-8">Thư viện Thành Đô</Link>
       </div>
-      <div className="flex items-center space-x-4">
-        <div className="relative">
+      <div className="flex items-center space-x-2 sm:space-x-4">
+        <div className="relative hidden sm:block">
           <input
             type="text"
             placeholder="Tìm kiếm..."
-            className="bg-white text-gray-900 text-sm rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f2a429]"
+            className="bg-white text-gray-900 text-sm rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f2a429] w-32 sm:w-auto"
           />
           <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
         </div>

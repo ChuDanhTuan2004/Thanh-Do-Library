@@ -2,7 +2,7 @@ import React from 'react';
 import { FiBook } from 'react-icons/fi';
 import BookCard from './BookCard';
 
-export default function BookSection({ title, books = [] }) {
+export default function BookSection({ title, books }) {
   const visibleBooks = books.slice(0, 5);
 
   return (

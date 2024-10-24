@@ -74,7 +74,6 @@ export default function DashboardHeader({ currentUser, onLogout, onMenuClick }) 
                     </button>
                     {isUserMenuOpen && (
                         <div className="absolute right-0 mt-3 w-56 bg-white rounded-md shadow-lg py-1 z-10">
-                            <p className="px-4 py-2 text-sm text-gray-700 border-b border-gray-200">{currentUser?.email || 'admin@example.com'}</p>
                             <Link to="/dashboard/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Hồ sơ</Link>
                             <Link to="/dashboard/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Cài đặt</Link>
                             <button

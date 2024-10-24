@@ -8,6 +8,7 @@ import AxiosSupport from '../../../services/axiosSupport';
 import ConfirmDialog from '../../ConfirmDialog';
 import Modal from '../../Modal';
 import CategoryForm from './CategoryForm';
+import { FaFolderPlus } from "react-icons/fa";
 
 const axiosInstance = new AxiosSupport();
 
@@ -120,8 +121,9 @@ const CategoryManagement = () => {
                         />
                         <FiSearch size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer" />
                     </div>
-                    <button onClick={() => setIsModalOpen(true)} className="flex justify-center items-start bg-white py-3 px-3 rounded-md text-black border border-gray-300 ml-4 w-1/5">
-                        <FaPlus />
+                    <button onClick={() => setIsModalOpen(true)} className="flex justify-center items-center bg-white py-3 px-3 rounded-md text-black border border-gray-300 ml-4 w-1/5">
+                        <FaFolderPlus className='mr-2'/>
+                        Thêm mới
                     </button>
                 </div>
 

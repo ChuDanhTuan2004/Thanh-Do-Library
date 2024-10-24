@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiHome, FiBook, FiRadio, FiList, FiMusic, FiUser, FiDisc, FiHelpCircle, FiX } from 'react-icons/fi';
+import { FiHome, FiBook, FiBookmark, FiBookOpen, FiUsers, FiTag, FiHelpCircle, FiX } from 'react-icons/fi';
 import ThanhDoBlueLogo from '../../assets/images/logo_blue_thanh_do.png';
 
 export default function ClientSidebar({ isOpen, onClose }) {
@@ -8,12 +8,11 @@ export default function ClientSidebar({ isOpen, onClose }) {
   const path = location.pathname;
 
   const navItems = [
-    { to: '/client/home', label: 'Trang chủ', icon: FiHome },
-    { to: '/client/browse', label: 'Duyệt sách', icon: FiBook },
-    { to: '/client/reading-list', label: 'Danh sách đọc', icon: FiList },
-    { to: '/client/borrowed', label: 'Sách đã mượn', icon: FiMusic },
-    { to: '/client/favorite-authors', label: 'Tác giả yêu thích', icon: FiUser },
-    { to: '/client/genres', label: 'Thể loại', icon: FiDisc },
+    { to: '/library/client', label: 'Trang chủ', icon: FiHome },
+    { to: '/library/client/myBookshelf', label: 'Tủ sách của tôi', icon: FiBookmark },
+    { to: '/library/client/borrowed', label: 'Sách đã mượn', icon: FiBookOpen },
+    // { to: '/library/client/favorite-authors', label: 'Tác giả yêu thích', icon: FiUsers },
+    { to: '/library/client/genres', label: 'Thể loại', icon: FiTag },
   ];
 
   const renderNavItem = (item) => {
