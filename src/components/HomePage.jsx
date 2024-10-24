@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBook, FaUniversity, FaInfoCircle, FaEnvelope, FaSignInAlt } from 'react-icons/fa';
 import { FaFacebookF, FaYoutube, FaGoogle } from 'react-icons/fa';
@@ -24,47 +24,87 @@ export default function HomePage() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isMenuOpen]);
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <header className="bg-[#0b328f] text-white sticky top-0 z-50 shadow-md">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-2 sm:py-4">
           <div className="flex justify-between items-center">
             <a href="/" className="flex items-center space-x-2">
-              {/* <div style={{ backgroundImage: `url(${TDlogo})` }} className="h-6 w-6 sm:h-8 sm:w-8" /> */}
-              <img src={TDlogo} alt="Logo" className="h-12 w-15 sm:h-12 sm:w-15 mr-2" />
-              <span className="text-lg sm:text-2xl">Thư viện Thành Đô</span>
+              <img src={TDlogo} alt="Logo" className="h-8 w-auto sm:h-12" />
+              <span className="text-base sm:text-lg md:text-2xl">Thư viện Thành Đô</span>
             </a>
             <nav className="hidden md:block">
-              <ul className="flex space-x-4 lg:space-x-6">
-                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-sm lg:text-base">Trang chủ</a></li>
-                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-sm lg:text-base">Danh mục</a></li>
-                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-sm lg:text-base">Dịch vụ</a></li>
-                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-sm lg:text-base">Nghiên cứu</a></li>
-                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-sm lg:text-base">Giới thiệu</a></li>
+              <ul className="flex space-x-2 lg:space-x-6">
+                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-xs lg:text-base">Danh mục</a></li>
+                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-xs lg:text-base">Dịch vụ</a></li>
+                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-xs lg:text-base">Nghiên cứu</a></li>
+                <li><a href="#" className="hover:text-[#f2a429] transition-colors text-xs lg:text-base">Giới thiệu</a></li>
                 <li>
-                  <Link to="/library/login" className="border-2 border-[#ffce46] bg-[#f2a429] hover:bg-[#ffce46] hover:text-white transition-colors text-sm lg:text-base rounded-full px-4 py-2">
+                  <Link to="/library/login" className="border-2 border-[#ffce46] bg-[#f2a429] hover:bg-[#ffce46] hover:text-white transition-colors text-xs lg:text-base rounded-full px-2 py-1 lg:px-4 lg:py-2">
                     Đăng Nhập
                   </Link>
                 </li>
               </ul>
             </nav>
-            <button className="md:hidden bg-transparent border-none text-white">
+            <button className="md:hidden bg-transparent border-none text-white" onClick={toggleMenu}>
               <FaBars className="h-6 w-6" />
             </button>
           </div>
         </div>
       </header>
 
+      {/* Mobile menu (Persistent Drawer) */}
+      <div className={`fixed inset-y-0 left-0 transform ${isMenuOpen ? "translate-x-0" : "-translate-x-full"} w-64 bg-[#0b328f] text-white transition duration-300 ease-in-out z-50 md:hidden`}>
+        <div className="flex justify-end p-4">
+          <button onClick={toggleMenu} className="text-white">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <ul className="flex flex-col items-start py-4 px-6">
+          <li><a href="#" className="block py-2 hover:text-[#f2a429]">Trang chủ</a></li>
+          <li><a href="#" className="block py-2 hover:text-[#f2a429]">Danh mục</a></li>
+          <li><a href="#" className="block py-2 hover:text-[#f2a429]">Dịch vụ</a></li>
+          <li><a href="#" className="block py-2 hover:text-[#f2a429]">Nghiên cứu</a></li>
+          <li><a href="#" className="block py-2 hover:text-[#f2a429]">Giới thiệu</a></li>
+          <li className="mt-4 w-full">
+            <Link to="/library/login" className="block w-full text-center py-2 border-2 border-[#ffce46] bg-[#f2a429] hover:bg-[#ffce46] hover:text-white transition-colors rounded-full">
+              Đăng Nhập
+            </Link>
+          </li>
+        </ul>
+      </div>
+
+      {/* Overlay */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" onClick={toggleMenu}></div>
+      )}
+
       <main className="flex-grow">
-        <div className="bg-cover bg-center py-16 sm:py-24 md:py-32" style={{ backgroundImage: `url(${ThanhDoBackgroundImage})` }}>
+        <div className="bg-gradient-to-r from-[#0b328f] to-[#e09321] py-8 sm:py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-white shadow-text">Chào mừng đến với Thư viện Đại học Thành Đô</h1>
-            <p className="text-lg sm:text-xl mb-6 sm:mb-8 text-white shadow-text max-w-2xl mx-auto">Khám phá thế giới tri thức tại trái tim của Đại học Thành Đô. Thư viện chúng tôi là cửa ngõ dẫn đến kiến thức, sáng tạo và đổi mới.</p>
-            <div className="max-w-xl mx-auto flex flex-col sm:flex-row">
-              <input type="text" placeholder="Tìm kiếm sách, tạp chí, tài liệu..." className="w-full sm:flex-grow px-4 py-2 rounded-lg sm:rounded-r-none focus:outline-none focus:ring-2 focus:ring-[#0b328f] mb-2 sm:mb-0" />
-              <button type="submit" className="w-full sm:w-auto bg-[#f2a429] hover:bg-[#e09321] text-white px-6 py-2 rounded-lg sm:rounded-l-none transition-colors flex items-center justify-center">
-                <FaSearch className="h-4 w-4 inline-block mr-2" />
-                Tìm kiếm
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 text-white">Thư viện Thành Đô</h1>
+            <p className="text-base sm:text-lg md:text-xl text-white mb-5">Chào mừng bạn đến với thư viện của chúng tôi. Hãy khám phá và tận hưởng những tài liệu hữu ích!</p>
+            <div className="max-w-3xl mx-auto flex flex-col sm:flex-row">
+              <input
+                type="text"
+                placeholder="Tìm kiếm sách, tạp chí, tài liệu..."
+                className="w-full px-4 py-2 sm:py-3 rounded-lg sm:rounded-r-none focus:outline-none focus:ring-2 focus:ring-[#0b328f] mb-2 sm:mb-0 text-base sm:text-lg"
+              />
+              <button
+                type="submit"
+                className="w-full sm:w-auto bg-[#f2a429] hover:bg-[#e09321] text-white px-4 sm:px-8 py-2 sm:py-3 rounded-lg sm:rounded-l-none transition-colors flex items-center justify-center text-base sm:text-lg font-semibold"
+              >
+                <FaSearch className="h-4 w-4 sm:h-5 sm:w-5 inline-block mr-2" />
               </button>
             </div>
           </div>
@@ -72,18 +112,18 @@ export default function HomePage() {
 
         <div className="py-12 sm:py-16 bg-white">
           <div className="container mx-auto px-4">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-[#0b328f]">Khám phá Bộ sưu tập của chúng tôi</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-[#0b328f]">Khám phá thư viện tài liệu</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               {[
                 { title: "Sách điện tử", desc: "Truy cập hàng nghìn sách điện tử" },
                 { title: "Tạp chí học thuật", desc: "Truy cập các tạp chí hàng đầu" },
-                { title: "Cơ sở dữ liệu", desc: "Truy cập các CSDL nghiên cứu" },
+                { title: "Giáo trình", desc: "Giáo trình các bộ môn chuyên ngành" },
                 { title: "Tài liệu đa phương tiện", desc: "Khám phá âm thanh và video" }
               ].map((item, index) => (
                 <div key={index} className="bg-gray-50 rounded-lg p-4 sm:p-6 shadow-md hover:shadow-lg transition-shadow" >
                   <h3 className="text-lg sm:text-xl font-bold mb-2 text-[#0b328f]">{item.title}</h3>
                   <p className="text-gray-600 mb-4 text-sm sm:text-base">{item.desc}</p>
-                  <div style={{ backgroundImage: `url(${ThanhDoBackgroundImage})` }} alt={item.title} className="w-full h-32 sm:h-40 object-cover rounded-md mb-4" />
+                  <div style={{ backgroundImage: `url(${TDlogo})`, backgroundSize: 'cover' }} alt={item.title} className="w-full h-24 sm:h-32 rounded-md mb-4" />
                   <button className="w-full bg-[#0b328f] text-white py-2 rounded hover:bg-[#092569] transition-colors text-sm sm:text-base">
                     Khám phá
                   </button>

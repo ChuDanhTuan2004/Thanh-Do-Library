@@ -20,7 +20,7 @@ export default function Sidebar({ isOpen, onClose }) {
         key={item.to}
         to={item.to}
         className={`flex items-center py-2 px-4 rounded-md transition-colors duration-200 ${
-          path === item.to ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+          path === item.to ? 'bg-[#0b328f] text-white' : 'text-gray-500 hover:text-[#0b328f] hover:bg-blue-100'
         }`}
         onClick={onClose}
       >
@@ -41,8 +41,7 @@ export default function Sidebar({ isOpen, onClose }) {
       <div className={`fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
-        <div className="flex justify-between items-center p-4">
-          <h2 className="text-xl font-semibold">Menu</h2>
+        <div className="flex justify-end items-center p-5 bg-[#0b328f] text-white">
           <button onClick={onClose}>
             <X className="h-6 w-6" />
           </button>
@@ -50,14 +49,6 @@ export default function Sidebar({ isOpen, onClose }) {
         <nav className="flex-1 space-y-1 px-2 py-4">
           {navItems.map(renderNavItem)}
         </nav>
-        <Link
-          to="/help"
-          className="flex items-center py-2 px-4 rounded-md m-2 bg-gray-100 text-gray-900 hover:bg-gray-200 transition-colors duration-200"
-          onClick={onClose}
-        >
-          <HelpCircle className="h-5 w-5 mr-3" />
-          <span className="text-sm font-medium">Trợ giúp</span>
-        </Link>
       </div>
     </>
   );

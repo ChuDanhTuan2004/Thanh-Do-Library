@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { FiSearch, FiTrash } from 'react-icons/fi';
-import { FaPlus } from 'react-icons/fa';
 import { CiEdit } from "react-icons/ci";
+import { FaPlus } from 'react-icons/fa';
+import { FiSearch, FiTrash } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Modal from './Modal';
+import AxiosSupport from '../../../services/axiosSupport';
+import ConfirmDialog from '../../ConfirmDialog';
+import Modal from '../../Modal';
 import CategoryForm from './CategoryForm';
-import AxiosSupport from '../services/axiosSupport';
-import ConfirmDialog from './ConfirmDialog';
 
 const axiosInstance = new AxiosSupport();
 
@@ -106,7 +106,7 @@ const CategoryManagement = () => {
     };
 
     return (
-        <div className="p-6 bg-gray-50 min-h-screen rounded-md">
+        <div className="p-6 bg-gradient-to-br from-blue-50 to-orange-50 rounded-md">
             <div className="flex-1 p-4 lg:p-6 space-y-4 lg:space-y-6 overflow-x-auto">
                 <h1 className="text-2xl font-semibold text-gray-900 mb-2">Quản lý danh mục</h1>
                 <div className="mb-4 lg:mb-6 flex justify-center items-center p-1">

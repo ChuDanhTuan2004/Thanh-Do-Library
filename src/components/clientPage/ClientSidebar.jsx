@@ -10,7 +10,6 @@ export default function ClientSidebar({ isOpen, onClose }) {
   const navItems = [
     { to: '/client/home', label: 'Trang chủ', icon: FiHome },
     { to: '/client/browse', label: 'Duyệt sách', icon: FiBook },
-    { to: '/client/audiobooks', label: 'Sách nói', icon: FiRadio },
     { to: '/client/reading-list', label: 'Danh sách đọc', icon: FiList },
     { to: '/client/borrowed', label: 'Sách đã mượn', icon: FiMusic },
     { to: '/client/favorite-authors', label: 'Tác giả yêu thích', icon: FiUser },
@@ -24,7 +23,7 @@ export default function ClientSidebar({ isOpen, onClose }) {
         key={item.to}
         to={item.to}
         className={`flex items-center py-2 px-4 rounded-md transition-colors duration-200 ${
-          path === item.to ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+          path === item.to ? 'bg-[#f2a429] text-[#0b328f]' : 'text-[#0b328f] hover:text-[#f2a429] hover:bg-gray-100'
         }`}
         onClick={onClose}
       >
@@ -45,9 +44,9 @@ export default function ClientSidebar({ isOpen, onClose }) {
       <div className={`fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
-        <div className="flex justify-between items-center p-4">
+        <div className="flex justify-between items-center p-4 bg-[#0b328f]">
           <img src={ThanhDoBlueLogo} alt="Thư viện Thành Đô Logo" className="h-8" />
-          <button onClick={onClose}>
+          <button onClick={onClose} className="text-white hover:text-[#f2a429]">
             <FiX className="h-6 w-6" />
           </button>
         </div>
@@ -56,7 +55,7 @@ export default function ClientSidebar({ isOpen, onClose }) {
         </nav>
         <Link
           to="/client/help"
-          className="flex items-center py-2 px-4 rounded-md m-2 bg-gray-100 text-gray-900 hover:bg-gray-200 transition-colors duration-200"
+          className="flex items-center py-2 px-4 rounded-md m-2 bg-[#0b328f] text-white hover:bg-[#f2a429] hover:text-[#0b328f] transition-colors duration-200"
           onClick={onClose}
         >
           <FiHelpCircle className="h-5 w-5 mr-3" />

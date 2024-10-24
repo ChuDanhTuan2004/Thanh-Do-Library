@@ -45,43 +45,38 @@ export default function DashboardHeader({ currentUser, onLogout, onMenuClick }) 
     };
 
     return (
-        <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between z-30">
+        <header className="fixed top-0 left-0 right-0 bg-[#0b328f] px-6 py-4 flex items-center justify-between z-30 shadow-md">
             <div className="flex items-center">
-                <button onClick={onMenuClick} className="mr-4">
-                    <Menu className="h-6 w-6" />
+                <button onClick={onMenuClick} className="mr-4 text-white hover:text-[#f2a429]">
+                    <Menu className="h-7 w-7" />
                 </button>
-                <Link to="/dashboard/home" className="text-xl font-semibold text-gray-900 mr-8">Thanh Do University</Link>
-                {/* <nav className="hidden md:flex space-x-4">
-                    <Link to="/dashboard/home" className="text-sm font-medium text-gray-500 hover:text-gray-700">Trang chủ</Link>
-                    <Link to="/dashboard/categories" className="text-sm font-medium text-gray-500 hover:text-gray-700">Danh mục</Link>
-                    <Link to="/dashboard/documents" className="text-sm font-medium text-gray-500 hover:text-gray-700">Tài liệu</Link>
-                    <Link to="/dashboard/users" className="text-sm font-medium text-gray-500 hover:text-gray-700">Người dùng</Link>
-                </nav> */}
+                <Link to="/dashboard/home" className="text-2xl font-bold text-white hover:text-[#f2a429] mr-8">Thư viện Thành Đô</Link>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
                 <div className="relative">
                     <input
                         type="text"
                         placeholder="Tìm kiếm..."
-                        className="bg-gray-100 text-gray-900 text-sm rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                        className="bg-white bg-opacity-20 text-white placeholder-gray-300 text-sm rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f2a429] w-64"
                     />
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white h-5 w-5" />
                 </div>
-                <button className="text-gray-500 hover:text-gray-700">
-                    <Bell className="h-5 w-5" />
+                <button className="text-white hover:text-[#f2a429]" title="Thông báo">
+                    <Bell className="h-6 w-6" />
                 </button>
                 <div className="relative" ref={userMenuRef}>
                     <button
                         onClick={toggleUserMenu}
-                        className="flex items-center space-x-2 text-gray-700 hover:text-gray-900"
+                        className="flex items-center space-x-2 text-white hover:text-[#f2a429]"
+                        title="Menu người dùng"
                     >
-                        <User className="h-5 w-5" />
+                        <User className="h-6 w-6" />
                     </button>
                     {isUserMenuOpen && (
-                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                            <p className="px-4 py-2 text-sm text-gray-700">{currentUser?.email || 'admin@example.com'}</p>
-                            <Link to="/dashboard/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</Link>
-                            <Link to="/dashboard/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</Link>
+                        <div className="absolute right-0 mt-3 w-56 bg-white rounded-md shadow-lg py-1 z-10">
+                            <p className="px-4 py-2 text-sm text-gray-700 border-b border-gray-200">{currentUser?.email || 'admin@example.com'}</p>
+                            <Link to="/dashboard/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Hồ sơ</Link>
+                            <Link to="/dashboard/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Cài đặt</Link>
                             <button
                                 onClick={handleLogout}
                                 className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"

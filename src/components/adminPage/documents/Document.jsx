@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { FiPlus, FiEdit, FiTrash, FiSearch } from 'react-icons/fi';
-import Modal from './Modal';
-import DocumentForm from './DocumentForm';
+import React, { useEffect, useState } from 'react';
+import { FiEdit, FiPlus, FiSearch, FiTrash } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AxiosSupport from '../services/axiosSupport'; // Import AxiosSupport
+import AxiosSupport from '../../../services/axiosSupport'; // Import AxiosSupport
+import Modal from '../../Modal';
+import DocumentForm from './DocumentForm';
 
 const axios = new AxiosSupport(); // Khởi tạo AxiosSupport
 
@@ -18,7 +18,24 @@ export default function Document() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
+
     const [category,setCategory] = useState('');
+
+    useEffect(() => {
+        fetchDocuments();
+        fetchCategories();
+    }, [currentPage]); // Thêm currentPage vào dependency array
+
+    const fetchCategories = async () => {
+        try {
+            const data = await axios.fetchWithAuth('getAllCategories');
+            setCategory(data);
+        } catch (error) {
+            console.error('Lỗi khi lấy danh mục:', error);
+            toast.error('Đã xảy ra lỗi khi tải danh sách danh mục.');
+        }
+    };
+
     const fetchDocuments = async () => {
         try {
             const response = await axios.getAllBooks({ page: currentPage - 1, size: itemsPerPage });
@@ -28,24 +45,10 @@ export default function Document() {
             toast.error('Không thể tải danh sách sách!');
         }
     };
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const data = await axios.fetchWithAuth('getAllCategories');
-                setCategory(data);
-            } catch (error) {
-                console.error('Lỗi khi lấy danh mục:', error);
-                toast.error('Đã xảy ra lỗi khi tải danh sách danh mục.');
-            }
-        };
-        fetchDocuments().then(() => {fetchCategories();})
-    }, []);
-
-
 
     const handleAddDocument = async (imageFile) => {
         try {
-            let image = null;  // Tạo sách mới
+            let image = null; 
             if (imageFile) {
                 image = await uploadImage(imageFile); // Gọi API để tải lên hình ảnh
             }
@@ -56,13 +59,10 @@ export default function Document() {
             fetchDocuments(); // Tải lại danh sách sách
             resetForm();
             toast.success('Sách đã được thêm thành công!');
+        } catch (error) {
+            toast.error('Không thể thêm sách!');
         }
-        catch
-            (error)
-            {
-                toast.error('Không thể thêm sách!');
-            }
-        }
+    };
 
     const handleSaveEdit = async (imageFile) => {
         try {
@@ -95,7 +95,7 @@ export default function Document() {
             formData.append('file', imageFile); // Thêm tệp hình ảnh
             formData.append('bookId', bookId); // Thêm ID của sách
 
-            return await axios.uploadImage(formData); // Gọi API để tải lên hình ảnh
+            await axios.uploadImage(formData); // Gọi API để tải lên hình ảnh
         } catch (error) {
             toast.error('Không thể tải lên hình ảnh!');
         }
@@ -120,12 +120,11 @@ export default function Document() {
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= totalPages) {
             setCurrentPage(newPage);
-            fetchDocuments();
         }
     };
 
     return (
-        <div className="p-6 bg-gray-50 min-h-screen rounded-md">
+        <div className="p-6 bg-gradient-to-br from-blue-50 to-orange-50 rounded-md">
             <div className="flex-1 lg:p-6 space-y-4 lg:space-y-6 overflow-x-auto">
                 <h1 className="text-2xl font-semibold text-gray-900 mb-2">Quản lý sách</h1>
 

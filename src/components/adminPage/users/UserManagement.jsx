@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { FiSearch, FiTrash } from 'react-icons/fi';
-import { FaUserPlus } from 'react-icons/fa';
 import { CiEdit } from "react-icons/ci";
+import { FaUserPlus } from 'react-icons/fa';
+import { FiSearch, FiTrash } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Modal from './Modal';
+import AxiosSupport from '../../../services/axiosSupport';
+import ConfirmDialog from '../../ConfirmDialog';
+import Modal from '../../Modal';
 import UserForm from './UserForm';
-import AxiosSupport from '../services/axiosSupport';
-import ConfirmDialog from './ConfirmDialog';
 
 const axiosInstance = new AxiosSupport();
 
@@ -163,7 +163,7 @@ const UserManagement = () => {
     const isAllSelected = paginatedUsers.every(user => selectedUsers[user.id]);
 
     return (
-        <div className="p-6 bg-gray-50 min-h-screen rounded-md">
+        <div className="p-6 bg-gradient-to-br from-blue-50 to-orange-50 rounded-md">
             <div className="flex-1 p-4 lg:p-6 space-y-4 lg:space-y-6 overflow-x-auto">
                 <h1 className="text-2xl font-semibold text-gray-900 mb-2">Quản lý người dùng</h1>
                 <div className="mb-4 lg:mb-6 flex justify-center items-center p-1">
@@ -177,8 +177,9 @@ const UserManagement = () => {
                         />
                         <FiSearch size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer" onClick={handleSearch} />
                     </div>
-                    <button onClick={() => setIsModalOpen(true)} className="flex justify-center items-start bg-white py-3 px-3 rounded-md text-black border border-gray-300 ml-4 w-1/5">
-                        <FaUserPlus />
+                    <button onClick={() => setIsModalOpen(true)} className="flex justify-center items-center bg-white py-3 px-3 rounded-md text-black border border-gray-300 ml-4 w-1/5">
+                        <FaUserPlus className='mr-2'/>
+                        Thêm mới
                     </button>
                 </div>
 
@@ -186,14 +187,6 @@ const UserManagement = () => {
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <th className="p-4">
-                                    <input
-                                        type="checkbox"
-                                        className="rounded border-gray-300 text-blue-600"
-                                        checked={isAllSelected}
-                                        onChange={handleSelectAll}
-                                    />
-                                </th>
                                 <th className="p-4">ID</th>
                                 <th className="p-4">Tên</th>
                                 <th className="p-4 hidden sm:table-cell">Email</th>
@@ -204,14 +197,6 @@ const UserManagement = () => {
                         <tbody className="bg-white divide-y divide-gray-200">
                             {paginatedUsers.map(user => (
                                 <tr key={user.id} className="hover:bg-gray-50">
-                                    <td className="p-4">
-                                        <input
-                                            type="checkbox"
-                                            className="rounded border-gray-300 text-blue-600"
-                                            checked={selectedUsers[user.id] || false}
-                                            onChange={() => handleSelectUser(user.id)}
-                                        />
-                                    </td>
                                     <td className="p-4 text-gray-500">USER-{user.id.toString().padStart(4, '0')}</td>
                                     <td className="p-4">{user.username}</td>
                                     <td className="p-4 hidden sm:table-cell">{user.email}</td>
@@ -239,10 +224,8 @@ const UserManagement = () => {
                 </div>
 
                 <div className="flex flex-col sm:flex-row justify-between items-center mt-4 text-gray-600 space-y-2 sm:space-y-0">
-                    <span className="text-sm">{Object.values(selectedUsers).filter(Boolean).length} trên {users.length} hàng được chọn.</span>
+                    <span className="text-sm">Trang {currentPage} trên {totalPages}</span>
                     <div className="flex items-center space-x-2 text-sm">
-                        <span className="hidden sm:inline">Số hàng mỗi trang: {itemsPerPage}</span>
-                        <span>Trang {currentPage} trên {totalPages}</span>
                         <div className="flex space-x-1">
                             <button
                                 onClick={() => handlePageChange(1)}
@@ -283,6 +266,7 @@ const UserManagement = () => {
                         onSubmit={isEditing ? handleSaveEdit : handleAddUser}
                         onCancel={resetForm}
                         isEditing={isEditing}
+                        className='p-6 bg-white rounded-lg shadow-md'
                     />
                 </Modal>
 
