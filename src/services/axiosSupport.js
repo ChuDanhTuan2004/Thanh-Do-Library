@@ -7,9 +7,6 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getStorage, ref, uploadBytes, getDownloadURL,getMetadata } from 'firebase/storage';
 
-// Xóa import này nếu bạn không sử dụng
-// import {upload} from "@testing-library/user-event/dist/upload";
-
 class AxiosSupport {
     constructor(baseURL = 'http://localhost:8080') {
         const firebaseConfig = {
@@ -30,32 +27,6 @@ class AxiosSupport {
         this.baseURL = baseURL;
         this.endpoints = urlManager;
     }
-
-    // ... rest of the code
-
-    // Sửa lại phương thức uploadImageToFirebase
-    async uploadImageToFirebase(file) {
-        const storageRef = ref(this.storage, `images/${file.name}`);
-
-        // Upload the file to Firebase Storage
-        const snapshot = await uploadBytes(storageRef, file);
-
-        // Get the metadata of the uploaded file
-        const metadata = await getMetadata(snapshot.ref);
-
-        // Construct the download URL
-        const bucket = metadata.bucket;
-        const pathEncoded = encodeURIComponent(metadata.fullPath);
-        const downloadToken = metadata.downloadTokens;
-
-        const downloadURL = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${pathEncoded}?alt=media&token=${downloadToken}`;
-
-        console.log("Download URL:", downloadURL);
-
-        return downloadURL;
-    }
-
-
 
     getFullURL(endpointKey, id = null) {
         const endpoint = this.endpoints[endpointKey];
@@ -127,7 +98,28 @@ class AxiosSupport {
         }, id);
     }
 
-    // Chỉnh sửa phương thức tải lên hình ảnh
+    // Sửa lại phương thức uploadImageToFirebase
+    async uploadImageToFirebase(file) {
+        const storageRef = ref(this.storage, `images/${file.name}`);
+
+        // Upload the file to Firebase Storage
+        const snapshot = await uploadBytes(storageRef, file);
+
+        // Get the metadata of the uploaded file
+        const metadata = await getMetadata(snapshot.ref);
+
+        // Construct the download URL
+        const bucket = metadata.bucket;
+        const pathEncoded = encodeURIComponent(metadata.fullPath);
+        const downloadToken = metadata.downloadTokens;
+
+        const downloadURL = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${pathEncoded}?alt=media&token=${downloadToken}`;
+
+        console.log("Download URL:", downloadURL);
+
+        return downloadURL;
+    }
+
     async uploadImage(formData) {
         return this.uploadImageToFirebase(formData.get('file'));
     }
@@ -172,6 +164,38 @@ class AxiosSupport {
         return this.fetchWithAuth('searchCategoriesByName', {
             method: 'GET',
             params: { name }
+        });
+    }
+
+    async getBookById(id) {
+        return this.fetchWithAuth('getBookById', {
+            method: 'GET',
+        }, id);
+    }
+
+    async getWishlistById(id) {
+        return this.fetchWithAuth('getWishlistById', {
+            method: 'GET',
+        }, id);
+    }
+
+    async updateWishlist(id, wishlist) {
+        return this.fetchWithAuth('updateWishlist', {
+            method: 'PUT',
+            body: JSON.stringify(wishlist),
+        }, id);
+    }
+
+    async removeBookFromWishlist(userId, bookId) {
+        return this.fetchWithAuth('deleteWishlist', {
+            method: 'DELETE',
+            body: JSON.stringify({ id: bookId }),
+        }, userId);
+    }
+
+    async getCurrentUser() {
+        return this.fetchWithAuth('getCurrentUser', {
+            method: 'GET',
         });
     }
 }

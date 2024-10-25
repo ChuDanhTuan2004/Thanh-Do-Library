@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { FiEdit, FiPlus, FiSearch, FiTrash } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AxiosSupport from '../../../services/axiosSupport'; // Import AxiosSupport
+import AxiosSupport from '../../../services/axiosSupport';
 import Modal from '../../Modal';
 import DocumentForm from './DocumentForm';
+import { BiSolidBookAdd } from "react-icons/bi";
 
-const axios = new AxiosSupport(); // Khởi tạo AxiosSupport
+const axios = new AxiosSupport();
 
 export default function Document() {
     const [documents, setDocuments] = useState([]);
@@ -16,15 +17,15 @@ export default function Document() {
     const [editingDocument, setEditingDocument] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(5);
+    const [itemsPerPage] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
 
-    const [category,setCategory] = useState('');
+    const [category, setCategory] = useState('');
 
     useEffect(() => {
         fetchDocuments();
         fetchCategories();
-    }, [currentPage]); // Thêm currentPage vào dependency array
+    }, [currentPage])
 
     const fetchCategories = async () => {
         try {
@@ -48,15 +49,15 @@ export default function Document() {
 
     const handleAddDocument = async (imageFile) => {
         try {
-            let image = null; 
+            let image = null;
             if (imageFile) {
-                image = await uploadImage(imageFile); // Gọi API để tải lên hình ảnh
+                image = await uploadImage(imageFile);
             }
             if (image) {
-                newDocument.url = image; // Cập nhật URL hình ảnh cho sách mới}
+                newDocument.imageUrl = image;
             }
             const response = await axios.createBook(newDocument);
-            fetchDocuments(); // Tải lại danh sách sách
+            fetchDocuments();
             resetForm();
             toast.success('Sách đã được thêm thành công!');
         } catch (error) {
@@ -64,11 +65,9 @@ export default function Document() {
         }
     };
 
+
     const handleSaveEdit = async (imageFile) => {
         try {
-            // Cập nhật thông tin sách
-
-            // Nếu có tệp hình ảnh, gửi yêu cầu tải lên
             let image = null;
             if (imageFile) {
                 const formData = new FormData();
@@ -77,7 +76,7 @@ export default function Document() {
                 image = await axios.uploadImage(formData); // Gọi API để tải lên hình ảnh
             }
             if(image) {
-                newDocument.url = image; // Cập nhật URL hình ảnh cho sách mới
+                newDocument.imageUrl = image; // Cập nhật URL hình ảnh cho sách mới
             }
             await axios.updateBook(editingDocument.bookId, newDocument); // Cập nhật sách
             fetchDocuments(); // Tải lại danh sách sách
@@ -92,10 +91,9 @@ export default function Document() {
     const uploadImage = async (imageFile, bookId) => {
         try {
             const formData = new FormData();
-            formData.append('file', imageFile); // Thêm tệp hình ảnh
-            formData.append('bookId', bookId); // Thêm ID của sách
-
-            await axios.uploadImage(formData); // Gọi API để tải lên hình ảnh
+            formData.append('file', imageFile);
+            formData.append('bookId', bookId);
+            return await axios.uploadImage(formData);
         } catch (error) {
             toast.error('Không thể tải lên hình ảnh!');
         }
@@ -139,8 +137,9 @@ export default function Document() {
                         />
                         <FiSearch size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer" />
                     </div>
-                    <button onClick={() => setIsModalOpen(true)} className="flex justify-center items-start bg-white py-3 px-3 rounded-md text-black border border-gray-300 ml-4 w-1/5">
-                        <FiPlus />
+                    <button onClick={() => setIsModalOpen(true)} className="flex justify-center items-center bg-white py-3 px-3 rounded-md text-black border border-gray-300 ml-4 w-1/5">
+                    <BiSolidBookAdd className='mr-2'/>
+                    Thêm mới
                     </button>
                 </div>
 
@@ -224,7 +223,7 @@ export default function Document() {
                 <Modal isOpen={isModalOpen} onClose={resetForm}>
                     <DocumentForm
                         document={newDocument}
-                        onChange={(e) => setNewDocument({ ...newDocument, [e.target.name]: e.target.value })}
+                        onChange={(updatedDocument) => setNewDocument(updatedDocument)}
                         onSubmit={isEditing ? handleSaveEdit : handleAddDocument}
                         onCancel={resetForm}
                         isEditing={isEditing}

@@ -17,6 +17,11 @@ const urlManager = {
     updateBook: (id) => `/books/${id}`, // Cập nhật sách với ID
     deleteBook: (id) => `/books/${id}`, // Xóa sách với ID
     uploadImage: '/books/upload', // Endpoint để tải lên hình ảnh
+    getBookById: (id) => `/books/${id}`,
+    getCurrentUser: '/users/current',
+    getWishlistById: (id) => `/wishlist/${id}`,
+    updateWishlist: (id) => `/wishlist/${id}`,
+    deleteWishlist: (id) => `/wishlist/${id}`,
 };
 
 export default urlManager;
