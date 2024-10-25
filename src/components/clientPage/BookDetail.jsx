@@ -4,18 +4,16 @@ import AxiosSupport from '../../services/axiosSupport';
 
 const axiosSupport = new AxiosSupport();
 
-const BookDetail = () => {
+const BookDetail = ({ bookId, onClose }) => {
     const [book, setBook] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { id } = useParams();
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchBookDetails = async () => {
             try {
                 setLoading(true);
-                const response = await axiosSupport.getBookById(id);
+                const response = await axiosSupport.getBookById(bookId);
                 setBook(response);
                 console.log('Book details:', response);
                 setLoading(false);
@@ -27,7 +25,7 @@ const BookDetail = () => {
         };
 
         fetchBookDetails();
-    }, [id]);
+    }, [bookId]);
 
     const handleReadNow = () => {
         if (book && book.url) {
@@ -39,7 +37,7 @@ const BookDetail = () => {
     };
 
     const handleClose = () => {
-        navigate('/library/client');
+        onClose();
     };
 
     if (loading) return null;

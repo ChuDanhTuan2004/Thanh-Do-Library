@@ -223,7 +223,7 @@ export default function Document() {
                 <Modal isOpen={isModalOpen} onClose={resetForm}>
                     <DocumentForm
                         document={newDocument}
-                        onChange={(e) => setNewDocument({ ...newDocument, [e.target.name]: e.target.value })}
+                        onChange={(updatedDocument) => setNewDocument(updatedDocument)}
                         onSubmit={isEditing ? handleSaveEdit : handleAddDocument}
                         onCancel={resetForm}
                         isEditing={isEditing}

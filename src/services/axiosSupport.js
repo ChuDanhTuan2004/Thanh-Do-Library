@@ -172,6 +172,32 @@ class AxiosSupport {
             method: 'GET',
         }, id);
     }
+
+    async getWishlistById(id) {
+        return this.fetchWithAuth('getWishlistById', {
+            method: 'GET',
+        }, id);
+    }
+
+    async updateWishlist(id, wishlist) {
+        return this.fetchWithAuth('updateWishlist', {
+            method: 'PUT',
+            body: JSON.stringify(wishlist),
+        }, id);
+    }
+
+    async removeBookFromWishlist(userId, bookId) {
+        return this.fetchWithAuth('deleteWishlist', {
+            method: 'DELETE',
+            body: JSON.stringify({ id: bookId }),
+        }, userId);
+    }
+
+    async getCurrentUser() {
+        return this.fetchWithAuth('getCurrentUser', {
+            method: 'GET',
+        });
+    }
 }
 
 export default AxiosSupport;

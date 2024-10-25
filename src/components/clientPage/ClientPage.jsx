@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import AxiosSupport from '../../services/axiosSupport';
+import { useUser } from '../../services/UserContext';
 import ClientSidebar from './ClientSidebar';
 import ClientHeader from './ClientHeader';
 import BookSection from './BookSection';
@@ -21,11 +22,13 @@ const FeaturedCategory = ({ title, description, imageUrl }) => (
 const axiosSupport = new AxiosSupport();
 
 export default function ClientPage() {
+  const { currentUser } = useUser();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
   const [books, setBooks] = useState([]);
   const navigate = useNavigate();
-  
+  const location = useLocation();
+  const isHomePage = location.pathname === '/library/client' || location.pathname === '/library/client/';
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -105,32 +108,34 @@ export default function ClientPage() {
           onMenuClick={toggleSidebar}
         />
         <main className="flex-1 overflow-x-hidden overflow-y-auto pt-16">
-          {/* Sử dụng Outlet để hiển thị nội dung của các route con */}
-          <Outlet />
-          
-          {/* Nội dung mặc định của ClientPage */}
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <Carousel items={carouselItems} />
-            <div className="my-8 bg-white bg-opacity-80 rounded-lg p-6">
-              <h2 className="text-2xl font-bold text-[#0b328f] mb-4">Danh mục nổi bật</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {featuredCategories.map((category, index) => (
-                  <FeaturedCategory key={index} {...category} />
-                ))}
+          {isHomePage ? (
+            // Nội dung mặc định của ClientPage
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8"> 
+              <Carousel items={carouselItems} />
+              <div className="my-8 bg-white bg-opacity-80 rounded-lg p-6">
+                <h2 className="text-2xl font-bold text-[#0b328f] mb-4">Danh mục nổi bật</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {featuredCategories.map((category, index) => (
+                    <FeaturedCategory key={index} {...category} />
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-8">
+                <div className="bg-white bg-opacity-80 rounded-lg p-6">
+                  <BookSection title="Đọc ngay" books={getBooks(10)} />
+                </div>
+                <div className="bg-white bg-opacity-80 rounded-lg p-6">
+                  <BookSection title="Dành cho bạn" books={getBooks(10)} />
+                </div>
+                <div className="bg-white bg-opacity-80 rounded-lg p-6">
+                  <BookSection title="Sách mới" books={getBooks(10)} />
+                </div>
               </div>
             </div>
-            <div className="space-y-8">
-              <div className="bg-white bg-opacity-80 rounded-lg p-6">
-                <BookSection title="Đọc ngay" books={getBooks(10)} />
-              </div>
-              <div className="bg-white bg-opacity-80 rounded-lg p-6">
-                <BookSection title="Dành cho bạn" books={getBooks(10)} />
-              </div>
-              <div className="bg-white bg-opacity-80 rounded-lg p-6">
-                <BookSection title="Sách mới" books={getBooks(10)} />
-              </div>
-            </div>
-          </div>
+          ) : (
+            // Hiển thị nội dung của các route con
+            <Outlet />
+          )}
           <ClientPageFooter />
         </main>
       </div>
