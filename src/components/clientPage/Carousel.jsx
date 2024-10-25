@@ -1,8 +1,31 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const Carousel = ({ items }) => {
+const Carousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const items = [
+    {
+      imageUrl: "https://images.unsplash.com/photo-1507842217343-583bb7270b66",
+      title: "Khám phá thế giới qua sách",
+      description: "Hàng nghìn đầu sách đa dạng chủ đề"
+    },
+    {
+      imageUrl: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da",
+      title: "Không gian học tập yên tĩnh",
+      description: "Khu vực đọc sách và nghiên cứu thoải mái"
+    },
+    {
+      imageUrl: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f",
+      title: "Sự kiện văn hóa hấp dẫn",
+      description: "Tham gia các buổi đọc sách, hội thảo và triển lãm"
+    },
+    {
+      imageUrl: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8",
+      title: "Tài nguyên số hiện đại",
+      description: "Truy cập ebook và cơ sở dữ liệu trực tuyến"
+    },
+  ];
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);

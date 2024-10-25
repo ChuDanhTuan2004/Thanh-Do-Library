@@ -71,10 +71,29 @@ class AxiosSupport {
     }
 
     // Thêm các phương thức API cho sách
-    async getAllBooks(params) {
+    async getAllBooks(params = {}) {
+        const {
+            title,
+            author,
+            publisher,
+            publishYear,
+            categoryId,
+            page = 0,
+            size = 10
+        } = params;
+
+        const queryParams = new URLSearchParams();
+        if (title) queryParams.append('title', title);
+        if (author) queryParams.append('author', author);
+        if (publisher) queryParams.append('publisher', publisher);
+        if (publishYear) queryParams.append('publishYear', publishYear);
+        if (categoryId) queryParams.append('categoryId', categoryId);
+        queryParams.append('page', page);
+        queryParams.append('size', size);
+
         return this.fetchWithAuth('getAllBooks', {
             method: 'GET',
-            params,
+            params: queryParams,
         });
     }
 

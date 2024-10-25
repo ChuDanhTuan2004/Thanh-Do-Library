@@ -18,7 +18,7 @@ export default function HomePage() {
     } else {
       document.body.style.overflow = 'unset';
     }
-  }, [isMenuOpen]);
+  }, [isMenuOpen]); 
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
@@ -102,15 +102,38 @@ export default function HomePage() {
             <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-[#0b328f]">Khám phá thư viện tài liệu</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               {[
-                { title: "Sách điện tử", desc: "Truy cập hàng nghìn sách điện tử" },
-                { title: "Tạp chí học thuật", desc: "Truy cập các tạp chí hàng đầu" },
-                { title: "Giáo trình", desc: "Giáo trình các bộ môn chuyên ngành" },
-                { title: "Tài liệu đa phương tiện", desc: "Khám phá âm thanh và video" }
+                { 
+                  title: "Sách điện tử", 
+                  desc: "Truy cập hàng nghìn sách điện tử",
+                  image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                },
+                { 
+                  title: "Tạp chí học thuật", 
+                  desc: "Truy cập các tạp chí hàng đầu",
+                  image: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                },
+                { 
+                  title: "Giáo trình", 
+                  desc: "Giáo trình các bộ môn chuyên ngành",
+                  image: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                },
+                { 
+                  title: "Tài liệu đa phương tiện", 
+                  desc: "Khám phá âm thanh và video",
+                  image: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                }
               ].map((item, index) => (
                 <div key={index} className="bg-gray-50 rounded-lg p-4 sm:p-6 shadow-md hover:shadow-lg transition-shadow" >
                   <h3 className="text-lg sm:text-xl font-bold mb-2 text-[#0b328f]">{item.title}</h3>
                   <p className="text-gray-600 mb-4 text-sm sm:text-base">{item.desc}</p>
-                  <div style={{ backgroundImage: `url(${TDlogo})`, backgroundSize: 'cover' }} alt={item.title} className="w-full h-24 sm:h-32 rounded-md mb-4" />
+                  <div 
+                    style={{ 
+                      backgroundImage: `url(${item.image})`, 
+                      backgroundSize: 'cover', 
+                      backgroundPosition: 'center' 
+                    }} 
+                    className="w-full h-24 sm:h-32 rounded-md mb-4" 
+                  />
                   <button className="w-full bg-[#0b328f] text-white py-2 rounded hover:bg-[#092569] transition-colors text-sm sm:text-base">
                     Khám phá
                   </button>
@@ -322,7 +345,7 @@ export default function HomePage() {
 
             {/* Thông tin liên hệ */}
             <div className="space-y-2">
-              <p className="font-semibold text-lg">Bản quy��n thuộc về Thư viện Trường Đại học Thành Đô</p>
+              <p className="font-semibold text-lg">Bản quyền thuộc về Thư viện Trường Đại học Thành Đô</p>
               <p>Địa chỉ: Kim Chung, Hoài Đức, Hà Nội, Việt Nam</p>
               <p>Email: lib@thanhdo.edu.vn</p>
               <p>Điện thoại: (84-24)33861016</p>
