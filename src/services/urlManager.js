@@ -22,6 +22,8 @@ const urlManager = {
     getWishlistById: (id) => `/wishlist/${id}`,
     updateWishlist: (id) => `/wishlist/${id}`,
     deleteWishlist: (id) => `/wishlist/${id}`,
+    checkAccess: (userId, bookId) => `/api/book-access/check/${userId}/${bookId}`,
+    createAccessRequest: '/api/book-access/request',
 };
 
 export default urlManager;

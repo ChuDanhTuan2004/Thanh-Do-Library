@@ -50,7 +50,9 @@ class AxiosSupport {
         const queryParams = new URLSearchParams(options.params).toString();
         const response = await fetch(`${url}${queryParams ? `?${queryParams}` : ''}`, {
             ...options,
-            headers,
+            headers: {
+                ...headers,
+            },
         });
 
         if (!response.ok) {
@@ -215,6 +217,22 @@ class AxiosSupport {
     async getCurrentUser() {
         return this.fetchWithAuth('getCurrentUser', {
             method: 'GET',
+        });
+    }
+
+    async checkAccess(userId, bookId) {
+        if (!userId || !bookId) {
+            throw new Error('User ID và Book ID không được để trống');
+        }
+        return this.fetchWithAuth('checkAccess', {
+            method: 'GET'
+        }, `${userId}/${bookId}`);
+    }
+
+    async createAccessRequest(userId, bookId, reason) {
+        return this.fetchWithAuth('createAccessRequest', {
+            method: 'POST',
+            body: JSON.stringify({ userId, bookId, reason }),
         });
     }
 }
