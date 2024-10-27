@@ -69,7 +69,6 @@ const BookDetail = ({ bookId, onClose }) => {
         onClose();
     };
 
-    if (loading) return null;
     if (error) return null;
     if (!book) return null;
 
