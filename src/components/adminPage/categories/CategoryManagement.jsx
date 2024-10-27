@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { FiSearch, FiTrash } from 'react-icons/fi';
-import { FaPlus } from 'react-icons/fa';
 import { CiEdit } from "react-icons/ci";
+import { FaPlus } from 'react-icons/fa';
+import { FiSearch, FiTrash } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Modal from './Modal';
+import AxiosSupport from '../../../services/axiosSupport';
+import ConfirmDialog from '../../ConfirmDialog';
+import Modal from '../../Modal';
 import CategoryForm from './CategoryForm';
-import AxiosSupport from '../services/axiosSupport';
-import ConfirmDialog from './ConfirmDialog';
+import { FaFolderPlus } from "react-icons/fa";
 
 const axiosInstance = new AxiosSupport();
 
@@ -21,12 +22,19 @@ const CategoryManagement = () => {
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
     const [categoryIdToDelete, setCategoryIdToDelete] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(10); // Số lượng danh mục trên mỗi trang
+    const [itemsPerPage] = useState(10);
+    const [totalPages, setTotalPages] = useState(0);
 
-    const fetchCategories = async () => {
+    const fetchCategories = async (query = '') => {
         try {
-            const data = await axiosInstance.fetchWithAuth('getAllCategories');
+            let data;
+            if (query) {
+                data = await axiosInstance.searchCategoriesByName(query);
+            } else {
+                data = await axiosInstance.fetchWithAuth('getAllCategories');
+            }
             setCategories(data);
+            setTotalPages(Math.ceil(data.length / itemsPerPage));
         } catch (error) {
             console.error('Lỗi khi lấy danh mục:', error);
             toast.error('Đã xảy ra lỗi khi tải danh sách danh mục.');
@@ -37,19 +45,13 @@ const CategoryManagement = () => {
         fetchCategories();
     }, []);
 
-    const totalPages = Math.ceil(categories.length / itemsPerPage);
-    const paginatedCategories = categories.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
-
     const handleAddCategory = async () => {
         try {
             await axiosInstance.fetchWithAuth('createCategory', {
                 method: 'POST',
                 body: JSON.stringify(newCategory),
             });
-            await fetchCategories(); // Cập nhật danh sách sau khi thêm
+            await fetchCategories();
             resetForm();
             toast.success('Danh mục đã được thêm thành công!');
         } catch (error) {
@@ -67,7 +69,7 @@ const CategoryManagement = () => {
                 method: 'PUT',
                 body: JSON.stringify(updatedCategory),
             }, categoryId);
-            await fetchCategories(); // Cập nhật danh sách sau khi sửa
+            await fetchCategories();
             resetForm();
             toast.success('Danh mục đã được cập nhật thành công!');
         } catch (error) {
@@ -81,10 +83,8 @@ const CategoryManagement = () => {
             await axiosInstance.fetchWithAuth('deleteCategory', {
                 method: 'DELETE',
             }, categoryId);
-            
-            // Cập nhật danh sách sau khi xóa
-            await fetchCategories(); // Cập nhật danh sách sau khi xóa
-            setIsConfirmDialogOpen(false); // Đóng dialog xác nhận
+            await fetchCategories();
+            setIsConfirmDialogOpen(false);
             toast.success('Danh mục đã được xóa thành công!');
         } catch (error) {
             console.error('Lỗi khi xóa danh mục:', error);
@@ -105,43 +105,57 @@ const CategoryManagement = () => {
         }
     };
 
+    const handleSearch = (e) => {
+        e.preventDefault();
+        fetchCategories(searchQuery);
+    };
+
+    const handleInputChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
     return (
-        <div className="p-6 bg-gray-50 min-h-screen rounded-md">
-            <div className="flex-1 p-4 lg:p-6 space-y-4 lg:space-y-6 overflow-x-auto">
+        <div className="p-6 bg-gradient-to-br from-blue-50 to-orange-50 rounded-md shadow-lg">
+            <div className="flex-1 space-y-6 overflow-x-auto">
                 <h1 className="text-2xl font-semibold text-gray-900 mb-2">Quản lý danh mục</h1>
-                <div className="mb-4 lg:mb-6 flex justify-center items-center p-1">
-                    <div className="relative flex items-center w-4/5">
+                
+                <form onSubmit={handleSearch} className="bg-white p-6 rounded-lg shadow-md space-y-4">
+                    <div className="flex items-center space-x-4">
                         <input
                             type="text"
                             placeholder="Tìm kiếm danh mục..."
                             value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-white border border-gray-300 rounded-md py-2 pl-3 pr-4 text-gray-700 placeholder-gray-500"
+                            onChange={handleInputChange}
+                            className="flex-grow px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
-                        <FiSearch size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer" />
+                        <button type="submit" className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 flex items-center">
+                            <FiSearch className="mr-2" />
+                            Tìm kiếm
+                        </button>
+                        <button onClick={() => setIsModalOpen(true)} className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-300 flex items-center">
+                            <FaFolderPlus className="mr-2" />
+                            Thêm mới
+                        </button>
                     </div>
-                    <button onClick={() => setIsModalOpen(true)} className="flex justify-center items-start bg-white py-3 px-3 rounded-md text-black border border-gray-300 ml-4 w-1/5">
-                        <FaPlus />
-                    </button>
-                </div>
+                </form>
 
-                <div className="bg-white rounded-md shadow-md overflow-x-auto">
+                <div className="bg-white rounded-lg shadow-md overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
-                            <tr className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <th className="p-4">ID</th>
-                                <th className="p-4">Tên</th>
-                                <th className="p-4">Thao tác</th>
+                            <tr>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {paginatedCategories.map(category => (
+                            {categories.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(category => (
                                 <tr key={category.categoryId} className="hover:bg-gray-50">
-                                    <td className="p-4 text-gray-500">{category.categoryId}</td>
-                                    <td className="p-4">{category.name}</td>
-                                    <td className="p-4">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{category.categoryId}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{category.name}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <button
-                                            className="text-blue-400 hover:text-gray-600 mr-2"
+                                            className="text-indigo-600 hover:text-indigo-900 mr-3"
                                             onClick={() => {
                                                 setNewCategory({ name: category.name });
                                                 setEditingCategory(category);
@@ -149,16 +163,16 @@ const CategoryManagement = () => {
                                                 setIsModalOpen(true);
                                             }}
                                         >
-                                            <CiEdit />
+                                            <CiEdit className="inline-block mr-1" /> Sửa
                                         </button>
                                         <button
-                                            className="text-red-400 hover:text-gray-600"
+                                            className="text-red-600 hover:text-red-900"
                                             onClick={() => {
                                                 setCategoryIdToDelete(category.categoryId);
                                                 setIsConfirmDialogOpen(true);
                                             }}
                                         >
-                                            <FiTrash />
+                                            <FiTrash className="inline-block mr-1" /> Xóa
                                         </button>
                                     </td>
                                 </tr>
@@ -167,33 +181,35 @@ const CategoryManagement = () => {
                     </table>
                 </div>
 
-                <div className="flex flex-col sm:flex-row justify-between items-center mt-4 text-gray-600 space-y-2 sm:space-y-0">
-                    <span className="text-sm">Trang {currentPage} trên {totalPages}</span>
+                <div className="flex justify-between items-center mt-4 bg-white p-4 rounded-lg shadow-md">
+                    <span className="text-sm text-gray-700">
+                        Trang <span className="font-medium">{currentPage}</span> trên <span className="font-medium">{totalPages}</span>
+                    </span>
                     <div className="flex items-center space-x-2 text-sm">
                         <button
                             onClick={() => handlePageChange(1)}
-                            className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                            className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
                             disabled={currentPage === 1}
                         >
                             &lt;&lt;
                         </button>
                         <button
                             onClick={() => handlePageChange(currentPage - 1)}
-                            className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                            className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
                             disabled={currentPage === 1}
                         >
                             &lt;
                         </button>
                         <button
                             onClick={() => handlePageChange(currentPage + 1)}
-                            className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                            className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
                             disabled={currentPage === totalPages}
                         >
                             &gt;
                         </button>
                         <button
                             onClick={() => handlePageChange(totalPages)}
-                            className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                            className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
                             disabled={currentPage === totalPages}
                         >
                             &gt;&gt;

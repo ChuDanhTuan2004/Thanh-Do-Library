@@ -1,51 +1,48 @@
-import React, { useState } from 'react';
-import { FiBook, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import React from 'react';
+import { FiBook } from 'react-icons/fi';
 import BookCard from './BookCard';
+import AxiosSupport from '../../services/axiosSupport';
+import { useUser } from '../../services/UserContext';
 
-export default function BookSection({ title, books = [] }) {
-  const [startIndex, setStartIndex] = useState(0);
-  const visibleBooks = 5;
+const axiosSupport = new AxiosSupport();
 
-  const nextBooks = () => {
-    setStartIndex((prevIndex) => 
-      Math.min(prevIndex + 1, books.length - visibleBooks)
-    );
-  };
+export default function BookSection({ title, books }) {
+  const { currentUser } = useUser();
+  const visibleBooks = books.slice(0, 6);
 
-  const prevBooks = () => {
-    setStartIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+  const handleAddToWishlist = async (bookId) => {
+    if (!currentUser) {
+      console.error('Người dùng chưa đăng nhập');
+      return;
+    }
+
+    try {
+      // Tạo một bản sao của danh sách yêu thích hiện tại
+      const updatedWishlist = [...(currentUser.wishlist || [])];
+      
+      // Thêm sách mới vào danh sách
+      updatedWishlist.push({ id: bookId });
+
+      // Cập nhật danh sách yêu thích
+      await axiosSupport.updateWishlist(currentUser.id, updatedWishlist);
+      
+      // Có thể thêm logic cập nhật UI ở đây nếu cần
+      console.log('Sách đã được thêm vào danh sách yêu thích');
+    } catch (error) {
+      console.error('Lỗi khi thêm sách vào danh sách yêu thích:', error);
+    }
   };
 
   return (
-    <div className="mb-8 relative">
+    <div className="mb-8">
       <h2 className="text-xl font-bold flex items-center text-gray-900 mb-4">
         <FiBook className="mr-2" /> {title}
       </h2>
 
-      <div className="relative">
-        <div className="flex overflow-x-auto scrollbar-hide space-x-4 py-4">
-          {books.slice(startIndex, startIndex + visibleBooks).map((book) => (
-            <BookCard key={book.id} book={book} />
-          ))}
-        </div>
-
-        {startIndex > 0 && (
-          <button
-            onClick={prevBooks}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 rounded-full p-2 shadow-md"
-          >
-            <FiChevronLeft size={24} />
-          </button>
-        )}
-
-        {startIndex < books.length - visibleBooks && (
-          <button
-            onClick={nextBooks}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 rounded-full p-2 shadow-md"
-          >
-            <FiChevronRight size={24} />
-          </button>
-        )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+        {visibleBooks.map((book) => (
+          <BookCard key={book.id} book={book} onAddToWishlist={handleAddToWishlist} />
+        ))}
       </div>
     </div>
   );

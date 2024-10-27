@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiHome, FiBook, FiRadio, FiList, FiMusic, FiUser, FiDisc, FiHelpCircle, FiX } from 'react-icons/fi';
+import { FiHome, FiBook, FiBookmark, FiBookOpen, FiUsers, FiTag, FiHelpCircle, FiX } from 'react-icons/fi';
 import ThanhDoBlueLogo from '../../assets/images/logo_blue_thanh_do.png';
 
 export default function ClientSidebar({ isOpen, onClose }) {
@@ -8,13 +8,11 @@ export default function ClientSidebar({ isOpen, onClose }) {
   const path = location.pathname;
 
   const navItems = [
-    { to: '/client/home', label: 'Trang chủ', icon: FiHome },
-    { to: '/client/browse', label: 'Duyệt sách', icon: FiBook },
-    { to: '/client/audiobooks', label: 'Sách nói', icon: FiRadio },
-    { to: '/client/reading-list', label: 'Danh sách đọc', icon: FiList },
-    { to: '/client/borrowed', label: 'Sách đã mượn', icon: FiMusic },
-    { to: '/client/favorite-authors', label: 'Tác giả yêu thích', icon: FiUser },
-    { to: '/client/genres', label: 'Thể loại', icon: FiDisc },
+    { to: '/library/client', label: 'Trang chủ', icon: FiHome },
+    { to: '/library/client/myBookshelf', label: 'Tủ sách của tôi', icon: FiBookmark },
+    // { to: '/library/client/borrowed', label: 'Sách đã mượn', icon: FiBookOpen },
+    // { to: '/library/client/favorite-authors', label: 'Tác giả yêu thích', icon: FiUsers },
+    // { to: '/library/client/genres', label: 'Thể loại', icon: FiTag },
   ];
 
   const renderNavItem = (item) => {
@@ -24,7 +22,7 @@ export default function ClientSidebar({ isOpen, onClose }) {
         key={item.to}
         to={item.to}
         className={`flex items-center py-2 px-4 rounded-md transition-colors duration-200 ${
-          path === item.to ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+          path === item.to ? 'bg-[#f2a429] text-[#0b328f]' : 'text-[#0b328f] hover:text-[#f2a429] hover:bg-gray-100'
         }`}
         onClick={onClose}
       >
@@ -45,23 +43,25 @@ export default function ClientSidebar({ isOpen, onClose }) {
       <div className={`fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
-        <div className="flex justify-between items-center p-4">
-          <img src={ThanhDoBlueLogo} alt="Thư viện Thành Đô Logo" className="h-8" />
-          <button onClick={onClose}>
+        <div className="flex justify-end items-center p-4 bg-[#0b328f]">
+          {/* <img src={ThanhDoBlueLogo} alt="Thư viện Thành Đô Logo" className="h-8" /> */}
+          <button onClick={onClose} className="text-white hover:text-[#f2a429]">
             <FiX className="h-6 w-6" />
           </button>
         </div>
         <nav className="flex-1 space-y-1 px-2 py-4">
           {navItems.map(renderNavItem)}
         </nav>
-        <Link
-          to="/client/help"
-          className="flex items-center py-2 px-4 rounded-md m-2 bg-gray-100 text-gray-900 hover:bg-gray-200 transition-colors duration-200"
-          onClick={onClose}
-        >
-          <FiHelpCircle className="h-5 w-5 mr-3" />
-          <span className="text-sm font-medium">Trợ giúp</span>
-        </Link>
+        <div className="absolute bottom-0 left-0 right-0 p-2">
+          <Link
+            to="/client/help"
+            className="flex items-center py-2 px-4 rounded-md bg-[#0b328f] text-white hover:bg-[#f2a429] hover:text-[#0b328f] transition-colors duration-200"
+            onClick={onClose}
+          >
+            <FiHelpCircle className="h-5 w-5 mr-3" />
+            <span className="text-sm font-medium">Trợ giúp</span>
+          </Link>
+        </div>
       </div>
     </>
   );

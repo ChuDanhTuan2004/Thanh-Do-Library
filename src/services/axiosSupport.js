@@ -1,8 +1,29 @@
 import axios from 'axios';
 import urlManager from './urlManager';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/storage';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getStorage, ref, uploadBytes, getDownloadURL,getMetadata } from 'firebase/storage';
 
 class AxiosSupport {
     constructor(baseURL = 'http://localhost:8080') {
+        const firebaseConfig = {
+            apiKey: "AIzaSyAewhdQuJuOebuT8PqvOvV_izJSMOvfSFQ",
+            authDomain: "demofirebase-6e7a1.firebaseapp.com",
+            projectId: "demofirebase-6e7a1",
+            storageBucket: "demofirebase-6e7a1.appspot.com",
+            messagingSenderId: "600682198593",
+            appId: "1:600682198593:web:e88c7a4373648fabc3b8c0",
+            measurementId: "G-DLSK3MYRFK"
+        };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        this.auth = getAuth(app); // Get the Firebase Authentication instance
+        this.storage = getStorage(app); // Get the Firebase Storage instance
+
         this.baseURL = baseURL;
         this.endpoints = urlManager;
     }
@@ -29,7 +50,9 @@ class AxiosSupport {
         const queryParams = new URLSearchParams(options.params).toString();
         const response = await fetch(`${url}${queryParams ? `?${queryParams}` : ''}`, {
             ...options,
-            headers,
+            headers: {
+                ...headers,
+            },
         });
 
         if (!response.ok) {
@@ -50,10 +73,29 @@ class AxiosSupport {
     }
 
     // Thêm các phương thức API cho sách
-    async getAllBooks(params) {
+    async getAllBooks(params = {}) {
+        const {
+            title,
+            author,
+            publisher,
+            publishYear,
+            categoryId,
+            page = 0,
+            size = 10
+        } = params;
+
+        const queryParams = new URLSearchParams();
+        if (title) queryParams.append('title', title);
+        if (author) queryParams.append('author', author);
+        if (publisher) queryParams.append('publisher', publisher);
+        if (publishYear) queryParams.append('publishYear', publishYear);
+        if (categoryId) queryParams.append('categoryId', categoryId);
+        queryParams.append('page', page);
+        queryParams.append('size', size);
+
         return this.fetchWithAuth('getAllBooks', {
             method: 'GET',
-            params,
+            params: queryParams,
         });
     }
 
@@ -77,18 +119,30 @@ class AxiosSupport {
         }, id);
     }
 
-    // Chỉnh sửa phương thức tải lên hình ảnh
+    // Sửa lại phương thức uploadImageToFirebase
+    async uploadImageToFirebase(file) {
+        const storageRef = ref(this.storage, `images/${file.name}`);
+
+        // Upload the file to Firebase Storage
+        const snapshot = await uploadBytes(storageRef, file);
+
+        // Get the metadata of the uploaded file
+        const metadata = await getMetadata(snapshot.ref);
+
+        // Construct the download URL
+        const bucket = metadata.bucket;
+        const pathEncoded = encodeURIComponent(metadata.fullPath);
+        const downloadToken = metadata.downloadTokens;
+
+        const downloadURL = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${pathEncoded}?alt=media&token=${downloadToken}`;
+
+        console.log("Download URL:", downloadURL);
+
+        return downloadURL;
+    }
+
     async uploadImage(formData) {
-        return axios.post('http://localhost:8080/books/upload',
-             formData,
-            // Không cần thiết lập 'Content-Type' cho multipart/form-data
-            {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`, // Thêm token vào header
-                    'Content-Type': 'multipart/form-data'
-                }
-            }
-        );
+        return this.uploadImageToFirebase(formData.get('file'));
     }
 
     async searchUsersByName(name) {
@@ -131,6 +185,54 @@ class AxiosSupport {
         return this.fetchWithAuth('searchCategoriesByName', {
             method: 'GET',
             params: { name }
+        });
+    }
+
+    async getBookById(id) {
+        return this.fetchWithAuth('getBookById', {
+            method: 'GET',
+        }, id);
+    }
+
+    async getWishlistById(id) {
+        return this.fetchWithAuth('getWishlistById', {
+            method: 'GET',
+        }, id);
+    }
+
+    async updateWishlist(id, wishlist) {
+        return this.fetchWithAuth('updateWishlist', {
+            method: 'PUT',
+            body: JSON.stringify(wishlist),
+        }, id);
+    }
+
+    async removeBookFromWishlist(userId, bookId) {
+        return this.fetchWithAuth('deleteWishlist', {
+            method: 'DELETE',
+            body: JSON.stringify({ id: bookId }),
+        }, userId);
+    }
+
+    async getCurrentUser() {
+        return this.fetchWithAuth('getCurrentUser', {
+            method: 'GET',
+        });
+    }
+
+    async checkAccess(userId, bookId) {
+        if (!userId || !bookId) {
+            throw new Error('User ID và Book ID không được để trống');
+        }
+        return this.fetchWithAuth('checkAccess', {
+            method: 'GET'
+        }, `${userId}/${bookId}`);
+    }
+
+    async createAccessRequest(userId, bookId, reason) {
+        return this.fetchWithAuth('createAccessRequest', {
+            method: 'POST',
+            body: JSON.stringify({ userId, bookId, reason }),
         });
     }
 }

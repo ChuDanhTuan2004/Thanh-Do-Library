@@ -2,6 +2,8 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { FaEnvelope, FaUser } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { FaBackward } from 'react-icons/fa';
 
 export default function Register() {
     const formik = useFormik({
@@ -24,7 +26,17 @@ export default function Register() {
     });
 
     return (
-        <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-[#0b328f] to-[#f2a429]">
+            <div className="container mx-auto px-4 py-2 fixed top-0 left-0 z-50">
+                <div className="flex justify-start items-center">
+                    <Link
+                        to="/library/home"
+                        className="bg-orange-400 hover:bg-orange-500 text-white rounded-full p-2 border-2 border-yellow-300 transition duration-300 ease-in-out"
+                    >
+                        <FaBackward className="text-xl" />
+                    </Link>
+                </div>
+            </div>
             <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
                 <h2 className="text-3xl font-bold text-center mb-6 text-[#0b328f]">Đăng Ký</h2>
                 <form onSubmit={formik.handleSubmit}>

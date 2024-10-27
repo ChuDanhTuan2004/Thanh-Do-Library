@@ -1,10 +1,10 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import CategoryManagement from './categories/CategoryManagement';
+import DashboardHome from './DashboardHome';
 import DashboardLayout from './DashboardLayout';
-import Document from './Document';
-import UserManagement from './UserManagement';
-import DashboardHome from './DashboardHome'
-import CategoryManagement from './CategoryManagement';
+import Document from './documents/Document';
+import UserManagement from './users/UserManagement';
 
 export default function Dashboard() {
     const currentUser = {
