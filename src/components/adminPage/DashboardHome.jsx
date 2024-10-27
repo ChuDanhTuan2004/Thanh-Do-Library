@@ -7,18 +7,18 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 // Dữ liệu mẫu cho biểu đồ
 const chartData = [
-    { name: 'Th1', value: 2800 },
-    { name: 'Th2', value: 2200 },
-    { name: 'Th3', value: 1800 },
-    { name: 'Th4', value: 2800 },
-    { name: 'Th5', value: 5900 },
-    { name: 'Th6', value: 2700 },
-    { name: 'Th7', value: 1600 },
-    { name: 'Th8', value: 5200 },
-    { name: 'Th9', value: 3700 },
-    { name: 'Th10', value: 3400 },
-    { name: 'Th11', value: 1400 },
-    { name: 'Th12', value: 5400 },
+    { name: 'Th1', value: 0 },
+    { name: 'Th2', value: 0 },
+    { name: 'Th3', value: 180 },
+    { name: 'Th4', value: 280 },
+    { name: 'Th5', value: 400 },
+    { name: 'Th6', value: 270 },
+    { name: 'Th7', value: 160 },
+    { name: 'Th8', value: 520 },
+    { name: 'Th9', value: 370 },
+    { name: 'Th10', value: 340 },
+    { name: 'Th11', value: 0 },
+    { name: 'Th12', value: 0 },
 ];
 
 const StatCard = ({ title, value, icon: Icon, change }) => (
@@ -150,8 +150,8 @@ export default function DashboardHome() {
                 </div>
 
                 <div className="bg-white p-6 rounded-lg shadow-sm">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Độc giả tích cực</h2>
-                    <p className="text-sm text-gray-500 mb-4">Top độc giả đã đọc/mượn nhiều sách nhất tháng này.</p>
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Sinh viên tích cực</h2>
+                    <p className="text-sm text-gray-500 mb-4">Đã đọc nhiều sách nhất tháng này.</p>
                     <div className="space-y-4">
                         <RecentReaderItem name="Nguyễn Thị Hoa" email="hoa.nguyen@email.com" booksRead={15} />
                         <RecentReaderItem name="Trần Văn Nam" email="nam.tran@email.com" booksRead={12} />

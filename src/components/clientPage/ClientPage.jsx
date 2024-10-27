@@ -88,10 +88,10 @@ export default function ClientPage() {
   ];
 
   const featuredCategories = [
-    { title: "Văn học", description: "Khám phá thế giới qua ngòi bút", imageUrl: demoBookCover },
-    { title: "Khoa học", description: "Hiểu biết sâu sắc về vũ trụ", imageUrl: demoBookCover },
-    { title: "Lịch sử", description: "Hành trình qua thời gian", imageUrl: demoBookCover },
-    { title: "Tâm lý học", description: "Khám phá tâm trí con người", imageUrl: demoBookCover },
+    { title: "Văn học Việt Nam", description: "Khám phá tinh hoa văn chương dân tộc", imageUrl: "https://images.unsplash.com/photo-1528605105345-5344ea20e269" },
+    { title: "Sách nước ngoài", description: "Mở rộng tầm nhìn toàn cầu", imageUrl: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8" },
+    { title: "Sách thiếu nhi", description: "Nuôi dưỡng trí tưởng tượng trẻ thơ", imageUrl: "https://images.unsplash.com/photo-1512820790803-83ca734da794" },
+    { title: "Sách học thuật", description: "Nâng cao kiến thức chuyên môn", imageUrl: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6" },
   ];
 
   const handleBookClick = (bookId) => {
@@ -122,13 +122,13 @@ export default function ClientPage() {
               </div>
               <div className="space-y-8">
                 <div className="bg-white bg-opacity-80 rounded-lg p-6">
-                  <BookSection title="Đọc ngay" books={getBooks(10)} />
+                  <BookSection title="Sách đang hot" books={getBooks(10)} />
                 </div>
                 <div className="bg-white bg-opacity-80 rounded-lg p-6">
-                  <BookSection title="Dành cho bạn" books={getBooks(10)} />
+                  <BookSection title="Gợi ý cho bạn" books={getBooks(10)} />
                 </div>
                 <div className="bg-white bg-opacity-80 rounded-lg p-6">
-                  <BookSection title="Sách mới" books={getBooks(10)} />
+                  <BookSection title="Sách mới về" books={getBooks(10)} />
                 </div>
               </div>
             </div>

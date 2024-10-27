@@ -12,7 +12,7 @@ export default function ClientSidebar({ isOpen, onClose }) {
     { to: '/library/client/myBookshelf', label: 'Tủ sách của tôi', icon: FiBookmark },
     // { to: '/library/client/borrowed', label: 'Sách đã mượn', icon: FiBookOpen },
     // { to: '/library/client/favorite-authors', label: 'Tác giả yêu thích', icon: FiUsers },
-    { to: '/library/client/genres', label: 'Thể loại', icon: FiTag },
+    // { to: '/library/client/genres', label: 'Thể loại', icon: FiTag },
   ];
 
   const renderNavItem = (item) => {

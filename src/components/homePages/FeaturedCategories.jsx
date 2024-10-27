@@ -60,8 +60,8 @@ export default function FeaturedCategories() {
         </div>
       </div>
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">Danh mục Sách Nổi bật</h1>
-        <p className="text-xl text-gray-600 mb-12 text-center">
+        <h1 className="text-4xl font-bold text-white mb-8 text-center">Danh mục Sách Nổi bật</h1>
+        <p className="text-xl text-white mb-12 text-center">
           Khám phá bộ sưu tập đa dạng của Thư viện Đại học Thành Đô với các danh mục sách phong phú
         </p>
 

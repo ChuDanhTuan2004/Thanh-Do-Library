@@ -3,6 +3,7 @@ import { FaLock, FaUser } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import AxiosSupport from '../services/axiosSupport';
 import { FaBackward } from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify';
 
 const axiosInstance = new AxiosSupport();
 
@@ -13,30 +14,39 @@ export default function Login() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        const response = await fetch(axiosInstance.getFullURL('login'), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: studentId,
-                password: password,
-            }),
-        });
+        try {
+            const response = await fetch(axiosInstance.getFullURL('login'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: studentId,
+                    password: password,
+                }),
+            });
 
-        if (response.ok) {
-            const data = await response.json();
-            console.log(data);
-            localStorage.setItem('token', data.accessToken);
-            localStorage.setItem('role', data.roles[0].authority);
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                localStorage.setItem('token', data.accessToken);
+                localStorage.setItem('role', data.roles[0].authority);
 
-            if (data.roles.some(role => role.authority === 'ROLE_ADMIN')) {
-                navigate('/dashboard/home');
+                if (data.roles.some(role => role.authority === 'ROLE_ADMIN')) {
+                    navigate('/dashboard/home');
+                } else {
+                    navigate('/library/client');
+                }
             } else {
-                navigate('/library/client');
+                toast.error('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.');
             }
-        } else {
-            console.error('Đăng nhập thất bại');
+        } catch (error) {
+            console.error('Lỗi đăng nhập:', error);
+            if (error.message === 'Failed to fetch') {
+                toast.error('Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng hoặc liên hệ quản trị viên.');
+            } else {
+                toast.error('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+            }
         }
     };
 
@@ -101,6 +111,7 @@ export default function Login() {
                     </p>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 }

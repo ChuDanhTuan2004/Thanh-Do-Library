@@ -37,9 +37,13 @@ const BookCard = ({ book, onAddToWishlist }) => {
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-md overflow-hidden relative h-80">
-        <div onClick={handleBookClick} className="cursor-pointer block w-56">
-          <img src={book.imageUrl} alt={book.title} className="w-full h-56 object-cover" />
+      <div className="bg-white rounded-lg shadow-md overflow-hidden relative h-80 group">
+        <div onClick={handleBookClick} className="cursor-pointer block w-full h-full">
+          <img 
+            src={book.imageUrl} 
+            alt={book.title} 
+            className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-105"
+          />
           <div className="p-4">
             <h3 className="font-semibold text-lg mb-1 truncate">{book.title}</h3>
             <p className="text-sm text-gray-600 truncate">{book.author}</p>
@@ -47,10 +51,10 @@ const BookCard = ({ book, onAddToWishlist }) => {
         </div>
         <button
           onClick={handleWishlistClick}
-          className="absolute bottom-2 right-2 p-1 rounded-full bg-white shadow-md hover:bg-gray-100 transition-colors duration-200 group"
+          className="absolute bottom-2 right-2 p-2 rounded-full bg-white shadow-md hover:bg-gray-100 transition-colors duration-200 group"
           title="Thêm vào sách yêu thích"
         >
-          <FaHeart className="h-4 w-4 text-red-500" />
+          <FaHeart className="h-5 w-5 text-red-500" />
           <span className="absolute bottom-full right-0 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
             Thêm vào sách yêu thích
           </span>

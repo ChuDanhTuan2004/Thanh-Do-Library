@@ -50,7 +50,9 @@ class AxiosSupport {
         const queryParams = new URLSearchParams(options.params).toString();
         const response = await fetch(`${url}${queryParams ? `?${queryParams}` : ''}`, {
             ...options,
-            headers,
+            headers: {
+                ...headers,
+            },
         });
 
         if (!response.ok) {
@@ -71,10 +73,29 @@ class AxiosSupport {
     }
 
     // Thêm các phương thức API cho sách
-    async getAllBooks(params) {
+    async getAllBooks(params = {}) {
+        const {
+            title,
+            author,
+            publisher,
+            publishYear,
+            categoryId,
+            page = 0,
+            size = 10
+        } = params;
+
+        const queryParams = new URLSearchParams();
+        if (title) queryParams.append('title', title);
+        if (author) queryParams.append('author', author);
+        if (publisher) queryParams.append('publisher', publisher);
+        if (publishYear) queryParams.append('publishYear', publishYear);
+        if (categoryId) queryParams.append('categoryId', categoryId);
+        queryParams.append('page', page);
+        queryParams.append('size', size);
+
         return this.fetchWithAuth('getAllBooks', {
             method: 'GET',
-            params,
+            params: queryParams,
         });
     }
 
@@ -196,6 +217,22 @@ class AxiosSupport {
     async getCurrentUser() {
         return this.fetchWithAuth('getCurrentUser', {
             method: 'GET',
+        });
+    }
+
+    async checkAccess(userId, bookId) {
+        if (!userId || !bookId) {
+            throw new Error('User ID và Book ID không được để trống');
+        }
+        return this.fetchWithAuth('checkAccess', {
+            method: 'GET'
+        }, `${userId}/${bookId}`);
+    }
+
+    async createAccessRequest(userId, bookId, reason) {
+        return this.fetchWithAuth('createAccessRequest', {
+            method: 'POST',
+            body: JSON.stringify({ userId, bookId, reason }),
         });
     }
 }
