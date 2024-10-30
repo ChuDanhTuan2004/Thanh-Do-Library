@@ -235,6 +235,44 @@ class AxiosSupport {
             body: JSON.stringify({ userId, bookId, reason }),
         });
     }
+
+    async getAllAccessRequests(params = {}) {
+        const {
+            page = 0,
+            size = 10,
+            status,
+            username,
+            bookTitle
+        } = params;
+    
+        const queryParams = new URLSearchParams();
+        queryParams.append('page', page);
+        queryParams.append('size', size);
+        if (status) queryParams.append('status', status);
+        if (username) queryParams.append('username', username);
+        if (bookTitle) queryParams.append('bookTitle', bookTitle);
+    
+        try {
+            return await this.fetchWithAuth('getAllRequests', {
+                method: 'GET',
+                params: queryParams
+            });
+        } catch (error) {
+            console.error('Lỗi khi lấy danh sách yêu cầu:', error);
+            throw error;
+        }
+    }
+
+    async processAccessRequest(requestId, librarianId, isApproved, rejectionReason = '') {
+        return this.fetchWithAuth('processAccessRequest', {
+            method: 'POST',
+            body: JSON.stringify({
+                librarianId,
+                approved: isApproved,
+                rejectionReason
+            })
+        }, requestId);
+    }
 }
 
 export default AxiosSupport;

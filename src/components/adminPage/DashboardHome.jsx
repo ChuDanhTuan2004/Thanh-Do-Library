@@ -1,25 +1,55 @@
+import React, { useState } from 'react';
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js';
-import React from 'react';
 import { Bar } from 'react-chartjs-2';
-import { FiActivity, FiDollarSign, FiShoppingCart, FiUser, FiUsers, FiBook, FiBookOpen } from 'react-icons/fi';
+import { FiActivity, FiUsers, FiBook, FiBookOpen, FiUser } from 'react-icons/fi';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-// Dữ liệu mẫu cho biểu đồ
-const chartData = [
-    { name: 'Th1', value: 0 },
-    { name: 'Th2', value: 0 },
-    { name: 'Th3', value: 180 },
-    { name: 'Th4', value: 280 },
-    { name: 'Th5', value: 400 },
-    { name: 'Th6', value: 270 },
-    { name: 'Th7', value: 160 },
-    { name: 'Th8', value: 520 },
-    { name: 'Th9', value: 370 },
-    { name: 'Th10', value: 340 },
-    { name: 'Th11', value: 0 },
-    { name: 'Th12', value: 0 },
-];
+// Dữ liệu mẫu cho các năm
+const yearlyData = {
+    2022: [
+        { name: 'Th1', value: 100 },
+        { name: 'Th2', value: 200 },
+        { name: 'Th3', value: 300 },
+        { name: 'Th4', value: 400 },
+        { name: 'Th5', value: 500 },
+        { name: 'Th6', value: 600 },
+        { name: 'Th7', value: 700 },
+        { name: 'Th8', value: 800 },
+        { name: 'Th9', value: 900 },
+        { name: 'Th10', value: 1000 },
+        { name: 'Th11', value: 1100 },
+        { name: 'Th12', value: 1200 },
+    ],
+    2023: [
+        { name: 'Th1', value: 150 },
+        { name: 'Th2', value: 250 },
+        { name: 'Th3', value: 350 },
+        { name: 'Th4', value: 450 },
+        { name: 'Th5', value: 550 },
+        { name: 'Th6', value: 650 },
+        { name: 'Th7', value: 750 },
+        { name: 'Th8', value: 850 },
+        { name: 'Th9', value: 950 },
+        { name: 'Th10', value: 1050 },
+        { name: 'Th11', value: 1150 },
+        { name: 'Th12', value: 1250 },
+    ],
+    2024: [
+        { name: 'Th1', value: 200 },
+        { name: 'Th2', value: 300 },
+        { name: 'Th3', value: 400 },
+        { name: 'Th4', value: 500 },
+        { name: 'Th5', value: 600 },
+        { name: 'Th6', value: 700 },
+        { name: 'Th7', value: 800 },
+        { name: 'Th8', value: 900 },
+        { name: 'Th9', value: 1000 },
+        { name: 'Th10', value: 1100 },
+        { name: 'Th11', value: 1200 },
+        { name: 'Th12', value: 1300 },
+    ],
+};
 
 const StatCard = ({ title, value, icon: Icon, change }) => (
     <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-[#0b328f]">
@@ -111,6 +141,8 @@ const ChartJSBarChart = ({ data }) => {
 };
 
 export default function DashboardHome() {
+    const [selectedYear, setSelectedYear] = useState(2024);
+
     return (
         <div className="p-6 bg-gradient-to-br from-blue-50 to-orange-50 rounded-md">
             <div className="mb-8">
@@ -145,8 +177,19 @@ export default function DashboardHome() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-sm">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Tổng quan</h2>
-                    <ChartJSBarChart data={chartData} />
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-lg font-semibold text-gray-900">Tổng quan</h2>
+                        <select
+                            value={selectedYear}
+                            onChange={(e) => setSelectedYear(Number(e.target.value))}
+                            className="border border-gray-300 rounded-md p-2"
+                        >
+                            <option value={2022}>2022</option>
+                            <option value={2023}>2023</option>
+                            <option value={2024}>2024</option>
+                        </select>
+                    </div>
+                    <ChartJSBarChart data={yearlyData[selectedYear]} />
                 </div>
 
                 <div className="bg-white p-6 rounded-lg shadow-sm">

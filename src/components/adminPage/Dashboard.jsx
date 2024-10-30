@@ -5,6 +5,8 @@ import DashboardHome from './DashboardHome';
 import DashboardLayout from './DashboardLayout';
 import Document from './documents/Document';
 import UserManagement from './users/UserManagement';
+import AccessRequests from './documents/AccessRequests';
+import RegistrationRequests from './users/RegistrationRequests';
 
 export default function Dashboard() {
     const currentUser = {
@@ -25,6 +27,8 @@ export default function Dashboard() {
                 <Route path="documents" element={<Document />} />
                 <Route path="categories" element={<CategoryManagement />} />
                 <Route path="users" element={<UserManagement />} />
+                <Route path="access-requests" element={<AccessRequests />} />
+                <Route path="registration-requests" element={<RegistrationRequests />} />
             </Route>
         </Routes>
     );

@@ -2,10 +2,16 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { FaEnvelope, FaUser } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaBackward } from 'react-icons/fa';
+import AxiosSupport from '../services/axiosSupport';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Register() {
+    const navigate = useNavigate();
+    const axiosSupport = new AxiosSupport();
+
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -19,9 +25,33 @@ export default function Register() {
                 .matches(/^\d+$/, 'Mã sinh viên chỉ được chứa số')
                 .required('Mã sinh viên không được để trống'),
         }),
-        onSubmit: (values) => {
-            console.log('Form data:', values);
-            // Handle registration logic here
+        onSubmit: async (values, { setSubmitting, setStatus }) => {
+            try {
+                const userData = {
+                    username: values.studentId,
+                    email: values.email,
+                    password: "Password123!",
+                    confirmPassword: "Password123!"
+                };
+
+                const response = await axiosSupport.fetchWithAuth('register', {
+                    method: 'POST',
+                    body: JSON.stringify(userData)
+                });
+
+                if (response === "Username existed") {
+                    toast.error("Mã sinh viên đã tồn tại trong hệ thống");
+                    setStatus("Mã sinh viên đã tồn tại trong hệ thống");
+                } else {
+                    toast.success("Đăng ký thành công! Vui lòng chờ admin phê duyệt tài khoản.");
+                }
+            } catch (error) {
+                console.error('Lỗi đăng ký:', error);
+                toast.error("Đã có lỗi xảy ra khi đăng ký. Vui lòng thử lại sau.");
+                setStatus("Đã có lỗi xảy ra khi đăng ký. Vui lòng thử lại sau.");
+            } finally {
+                setSubmitting(false);
+            }
         },
     });
 
@@ -74,14 +104,32 @@ export default function Register() {
                             <p className="text-red-500 text-sm mt-1">{formik.errors.studentId}</p>
                         ) : null}
                     </div>
+                    {formik.status && (
+                        <div className="text-red-500 text-sm mt-4 text-center">
+                            {formik.status}
+                        </div>
+                    )}
                     <button
                         type="submit"
-                        className="w-full bg-[#0b328f] text-white px-4 py-2 rounded-lg hover:bg-[#08367b] focus:outline-none transition duration-300"
+                        disabled={formik.isSubmitting}
+                        className="w-full bg-[#0b328f] text-white px-4 py-2 rounded-lg hover:bg-[#08367b] focus:outline-none transition duration-300 disabled:opacity-50"
                     >
-                        Đăng Ký
+                        {formik.isSubmitting ? 'Đang xử lý...' : 'Đăng Ký'}
                     </button>
                 </form>
             </div>
+            <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
         </div>
     );
 }

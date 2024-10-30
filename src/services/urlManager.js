@@ -24,6 +24,11 @@ const urlManager = {
     deleteWishlist: (id) => `/wishlist/${id}`,
     checkAccess: (param) => `/api/book-access/check/${param}`,
     createAccessRequest: '/api/book-access/request',
+    processAccessRequest: (requestId) => `/api/book-access/process/${requestId}`,
+    getAllRequests: '/api/book-access/requests',
+    getPendingRegistrations: '/admin/pending-registrations',
+    approveRegistration: (id) => `/users/append/${id}`,
+    rejectRegistration: (id) => `/admin/reject-registration/${id}`,
 };
 
 export default urlManager;

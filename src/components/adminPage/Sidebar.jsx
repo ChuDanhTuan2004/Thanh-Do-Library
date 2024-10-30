@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, FolderKanban, FileText, Users, HelpCircle, X } from 'lucide-react';
+import { Home, FolderKanban, FileText, Users, HelpCircle, X, Key, UserPlus } from 'lucide-react';
 
 export default function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
@@ -11,6 +11,8 @@ export default function Sidebar({ isOpen, onClose }) {
     { to: '/dashboard/documents', label: 'Tài liệu', icon: FileText },
     { to: '/dashboard/categories', label: 'Danh mục', icon: FolderKanban },
     { to: '/dashboard/users', label: 'Người dùng', icon: Users },
+    { to: '/dashboard/access-requests', label: 'Yêu cầu truy cập', icon: Key },
+    { to: '/dashboard/registration-requests', label: 'Yêu cầu đăng ký', icon: UserPlus },
   ];
 
   const renderNavItem = (item) => {

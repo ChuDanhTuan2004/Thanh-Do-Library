@@ -11,9 +11,12 @@ import ScientificResearchPaper from './components/homePages/ScientificResearchPa
 import FeaturedCategories from './components/homePages/FeaturedCategories';
 import BookSuggestion from './components/homePages/BookSuggestion';
 import 'react-toastify/dist/ReactToastify.css';
-import MyBookshelf from './components/clientPage/MyBookshelf';
+// import MyBookshelf from './components/clientPage/MyBookshelf';
+
 import BookDetail from './components/clientPage/BookDetail';
 import { UserProvider } from './services/UserContext';
+import FavoriteBooks from './components/clientPage/FavoriteBooks';
+import ReadingHistory from './components/clientPage/ReadingHistory';
 
 function App() {
   return (
@@ -38,7 +41,9 @@ function App() {
           }
         >
           {/* Thêm route con cho MyBookshelf */}
-          <Route path="myBookshelf" element={<MyBookshelf />} />
+          {/* <Route path="myBookshelf" element={<MyBookshelf />} /> */}
+          <Route path="favoriteBooks" element={<FavoriteBooks />} />
+          <Route path="readingHistory" element={<ReadingHistory />} />
 
           {/* Route con cho trang chi tiết sách */}
           <Route path="book/:id" element={<BookDetail />} />

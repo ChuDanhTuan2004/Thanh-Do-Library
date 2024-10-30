@@ -9,7 +9,9 @@ export default function ClientSidebar({ isOpen, onClose }) {
 
   const navItems = [
     { to: '/library/client', label: 'Trang chủ', icon: FiHome },
-    { to: '/library/client/myBookshelf', label: 'Tủ sách của tôi', icon: FiBookmark },
+    // { to: '/library/client/myBookshelf', label: 'Tủ sách của tôi', icon: FiBookmark },
+    { to: '/library/client/favoriteBooks', label: 'Sách yêu thích', icon: FiBookmark },
+    { to: '/library/client/readingHistory', label: 'Lịch sử đọc', icon: FiBookOpen },
     // { to: '/library/client/borrowed', label: 'Sách đã mượn', icon: FiBookOpen },
     // { to: '/library/client/favorite-authors', label: 'Tác giả yêu thích', icon: FiUsers },
     // { to: '/library/client/genres', label: 'Thể loại', icon: FiTag },
@@ -19,7 +21,6 @@ export default function ClientSidebar({ isOpen, onClose }) {
     const Icon = item.icon;
     return (
       <Link
-        key={item.to}
         to={item.to}
         className={`flex items-center py-2 px-4 rounded-md transition-colors duration-200 ${
           path === item.to ? 'bg-[#f2a429] text-[#0b328f]' : 'text-[#0b328f] hover:text-[#f2a429] hover:bg-gray-100'

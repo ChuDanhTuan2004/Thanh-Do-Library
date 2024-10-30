@@ -31,10 +31,6 @@ const BookCard = ({ book, onAddToWishlist }) => {
     setShowBookDetail(false);
   };
 
-  if (currentUser.loading) {
-    return <div>Đang tải...</div>;
-  }
-
   return (
     <>
       <div className="bg-white rounded-lg shadow-md overflow-hidden relative h-80 group">
